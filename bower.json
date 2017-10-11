@@ -1,0 +1,13 @@
+{
+  "name": "question-authoring",
+  "main": "index.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+    "custom-input-element": "chandrangreat/custom-input-element",
+    "fullpage.js": "^2.9.4"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "question-authoring",
+  "short_name": "question-authoring",
+  "start_url": "/",
+  "display": "standalone"
+}

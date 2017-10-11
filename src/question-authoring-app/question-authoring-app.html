@@ -1,0 +1,51 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/custom-input-element/custom-input-element.html">
+
+<dom-module id="question-authoring-app">
+  <template>
+    <style>      
+      .fullpage {
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        background: #040e1f;
+      }
+
+      .section {
+        height: 100%;
+      }
+    </style>
+    <div class="fullpage">
+      <div class="section">
+        <custom-input-element label="Choose a Concept"></custom-input-element>
+      </div>
+      
+      <div class="section">
+        <custom-input-element label="Choose a Content"></custom-input-element>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class QuestionAuthoringApp extends Polymer.Element {
+      static get is() { return 'question-authoring-app'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'question-authoring-app'
+          }
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+      } 
+    }
+    window.customElements.define(QuestionAuthoringApp.is, QuestionAuthoringApp);
+  </script>
+</dom-module>

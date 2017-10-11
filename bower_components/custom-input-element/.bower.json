@@ -1,0 +1,26 @@
+{
+  "name": "custom-input-element",
+  "main": "custom-input-element.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+    "paper-input": "PolymerElements/paper-input#^2.0.2"
+  },
+  "devDependencies": {
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0"
+  },
+  "homepage": "https://github.com/chandrangreat/custom-input-element",
+  "_release": "d49fe774fe",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "d49fe774fec67f3d6b61d3169388e380f0fdc932"
+  },
+  "_source": "https://github.com/chandrangreat/custom-input-element.git",
+  "_target": "*",
+  "_originalSource": "chandrangreat/custom-input-element"
+}
