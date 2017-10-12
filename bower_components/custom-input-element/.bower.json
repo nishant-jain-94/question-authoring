@@ -14,13 +14,14 @@
     "polymer": "^2.0.0"
   },
   "homepage": "https://github.com/chandrangreat/custom-input-element",
-  "_release": "d49fe774fe",
+  "_release": "1b2007adc9",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "d49fe774fec67f3d6b61d3169388e380f0fdc932"
+    "commit": "1b2007adc91f5b55238b5be66c13c59a98a9121f"
   },
   "_source": "https://github.com/chandrangreat/custom-input-element.git",
   "_target": "*",
-  "_originalSource": "chandrangreat/custom-input-element"
+  "_originalSource": "chandrangreat/custom-input-element",
+  "_direct": true
 }

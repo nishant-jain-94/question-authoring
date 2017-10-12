@@ -7,44 +7,58 @@
       .fullpage {
         width: 100%;
         height: 100%;
-        overflow-x: hidden;
-        background: #040e1f;
+        overflow: hidden;
+        color: #f4f4f9;
+        background: #000000;
+      }
+
+      .container:focus {
+        background: #f4f4;
+      }
+
+      .section, .container {
+        height: 100%;
+        width: 100%;
+      }
+
+      .container {
+        display: table;
       }
 
       .section {
-        height: 100%;
+        display: table-cell;
+        padding-left: 100px;
+        vertical-align: middle;
       }
+
     </style>
     <div class="fullpage">
-      <div class="section">
-        <custom-input-element label="Choose a Concept"></custom-input-element>
+      <div class="container">
+        <div class="section active">
+          <custom-input-element class="component" label="Choose a Concept" value="{{concept}}"></custom-input-element>
+        </div>
       </div>
-      
-      <div class="section">
-        <custom-input-element label="Choose a Content"></custom-input-element>
+      <div class="container">
+        <div class="section">
+          <custom-input-element class="component" label="Choose a Content" value="{{content}}"></custom-input-element>
+        </div>
+      </div>
+      <div class="container">
+        <div class="section">
+          <custom-input-element class="component" label="What exactly do you want to check?" value="{{taxonomy}}"></custom-input-element>
+        </div>
       </div>
     </div>
   </template>
 
   <script>
-    /**
-     * @customElement
-     * @polymer
-     */
     class QuestionAuthoringApp extends Polymer.Element {
       static get is() { return 'question-authoring-app'; }
-      static get properties() {
-        return {
-          prop1: {
-            type: String,
-            value: 'question-authoring-app'
-          }
-        };
-      }
+      static get properties() { }
 
       connectedCallback() {
         super.connectedCallback();
-      } 
+      }
     }
     window.customElements.define(QuestionAuthoringApp.is, QuestionAuthoringApp);
   </script>
