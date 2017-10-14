@@ -1,19 +1,14 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/custom-input-element/custom-input-element.html">
-
 <dom-module id="question-authoring-app">
   <template>
     <style>      
       .fullpage {
         width: 100%;
         height: 100%;
-        overflow: hidden;
+        /* overflow: hidden; */
         color: #f4f4f9;
         background: #000000;
-      }
-
-      .container:focus {
-        background: #f4f4;
       }
 
       .section, .container {
@@ -33,8 +28,9 @@
 
     </style>
     <div class="fullpage">
+      <!-- <h5>Question Authoring</h5> -->
       <div class="container">
-        <div class="section active">
+        <div class="section">
           <custom-input-element class="component" label="Choose a Concept" value="{{concept}}"></custom-input-element>
         </div>
       </div>
@@ -45,7 +41,18 @@
       </div>
       <div class="container">
         <div class="section">
-          <custom-input-element class="component" label="What exactly do you want to check?" value="{{taxonomy}}"></custom-input-element>
+          <custom-input-element class="component" label="Expected Outcome" value="{{expectedOutcome}}"></custom-input-element>
+        </div>
+      </div>
+      <div class="container">
+        <div class="section">
+          <custom-input-element class="component" label="Question Type" value="{{questionType}}"></custom-input-element>
+          <paper-button raised on-click="authorQuestion">Author Question</paper-button>
+        </div>
+      </div>
+      <div class="container">
+        <div class="section">
+          <mcq-player></mcq-player>
         </div>
       </div>
     </div>
@@ -54,7 +61,22 @@
   <script>
     class QuestionAuthoringApp extends Polymer.Element {
       static get is() { return 'question-authoring-app'; }
-      static get properties() { }
+      static get properties() {
+        return {
+          concept: {
+            type: String
+          },
+          content: {
+            type: String
+          },
+          expectedOutcome: {
+            type: String
+          },
+          questionType: {
+            type: String 
+          }
+        }
+      }
 
       connectedCallback() {
         super.connectedCallback();

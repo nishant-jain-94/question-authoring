@@ -4,7 +4,8 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
     "fullpage.js": "^2.9.4",
-    "custom-input-element": "chandrangreat/custom-input-element"
+    "custom-input-element": "chandrangreat/custom-input-element",
+    "jquery": "^3.2.1"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
