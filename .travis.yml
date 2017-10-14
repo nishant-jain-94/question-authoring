@@ -1,7 +1,7 @@
 language: node_js
 node_js:
 - stable
-before_script:
+before_install:
 - sudo npm install -g bower
 - npm install request --save
 - ./install-dependencies.js
