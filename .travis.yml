@@ -1,11 +1,10 @@
 language: node_js
 node_js:
 - stable
-before_install:
+install:
 - sudo npm install -g bower
 - npm install request --save
 - ./install-dependencies.js
-install:
 - bower install
 deploy:
   provider: heroku
