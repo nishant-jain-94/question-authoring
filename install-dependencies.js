@@ -7,6 +7,7 @@ request('https://morning-peak-73646.herokuapp.com/players', (error, response, pl
   fs.writeFileSync('players.json', JSON.stringify(players));
   const bowerDependencies = JSON.parse(dependencies).join(' ');
   exec(`bower install ${bowerDependencies} --save`, (err, stdout, stderr) => {
+    console.log(`${err}`);
     console.log(`${stdout}`);
     console.log(`${stderr}`);
   });  
