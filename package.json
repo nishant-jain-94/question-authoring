@@ -1,0 +1,26 @@
+{
+  "name": "question-authoring-forked",
+  "version": "1.0.0",
+  "description": "",
+  "main": "install-dependencies.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "bower": "^1.8.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nishant-jain-94/question-authoring.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nishant-jain-94/question-authoring/issues"
+  },
+  "homepage": "https://github.com/nishant-jain-94/question-authoring#readme"
+}
