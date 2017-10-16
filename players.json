@@ -1,8 +1,0 @@
-[
-    {
-        "name": "mcq-player",
-        "repo": "nishant-jain-94/mcq-player",
-        "type": "mcq-type",
-        "selector": "<mcq-player-authoring-mode><mcq-player-authoring-mode>"
-    }
-]
