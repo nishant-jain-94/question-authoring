@@ -28,9 +28,10 @@
         vertical-align: middle;
       }
 
-      #player {
+      .player {
         height: 100%;
         width: 50%;
+        display: inline-block;
       }
 
     </style>
@@ -58,7 +59,8 @@
         </div>
       </div>
       <div class="container">
-        <div id="player"></div>
+        <div class="player" id="authoringMode"></div>
+        <div class="player" id="playMode"></div>
       </div>
     </div>
   </template>
@@ -82,6 +84,14 @@
           },
           player: {
             type: String
+          },
+          rawMdQuestion: {
+            type: String,
+            observers: '_changedRawMDQuestion'
+          },
+          test: {
+            type: String,
+            value: "# Question \n Test Question"
           }
         }
       }
@@ -95,8 +105,20 @@
         const questionPlayResolvedUrl = this.resolveUrl(`../../bower_components/${this.player}/${this.player}-play-mode/${this.player}-play-mode.html`);
         Polymer.importHref(questionAuthoringResolvedUrl);
         Polymer.importHref(questionPlayResolvedUrl);
-        this.$.player.innerHTML = `<${this.player}-authoring-mode></${this.player}-authoring-mode`;
+        this.$.authoringMode.innerHTML = `<${this.player}-authoring-mode id="authoringtool"></${this.player}-authoring-mode>`;
+        const mcqPlayerPlayMode = document.createElement(`${this.player}-play-mode`);
+        this.$.playMode.innerHTML = `<${this.player}-play-mode test="{{test}}" md-assessment-item="[[test]]"></${this.player}-play-mode>`;
+        this.$.authoringMode.getElementsByTagName(`${this.player}-authoring-mode`)[0].addEventListener('questionChanged', function(newValue) {
+          console.log(newValue);
+          mcqPlayerPlayMode.mdAssessmentItem = newValue.detail.mdQuestion;
+        });
       }
+
+      _changedRawMDQuestion() {
+        console.log("Something changed");
+      }
+
+      
     }
     window.customElements.define(QuestionAuthoringApp.is, QuestionAuthoringApp);
   </script>
