@@ -4,7 +4,6 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
     "custom-input-element": "chandrangreat/custom-input-element",
-    "jquery": "^3.2.1",
     "paper-button": "PolymerElements/paper-button#^2.0.0"
   },
   "devDependencies": {
