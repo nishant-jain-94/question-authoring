@@ -9,11 +9,11 @@
         width: 100%;
         height: 100%;
         overflow-x: hidden;
-        color: #f4f4f9;
         background: #000000;
       }
 
       .section, .container {
+        color: #f4f4f9;        
         height: 100%;
         width: 100%;
       }
@@ -110,6 +110,7 @@
         Polymer.importHref(questionPlayResolvedUrl);
         this.$.authoringMode.innerHTML = `<${this.player}-authoring-mode id="authoringtool"></${this.player}-authoring-mode>`;
         const playerInPlayMode = document.createElement(`${this.player}-play-mode`);
+        this.$.playMode.innerHTML = "";
         this.$.playMode.append(playerInPlayMode);
         this.$.authoringMode.getElementsByTagName(`${this.player}-authoring-mode`)[0].addEventListener('questionChanged', (newValue) => {
           console.log(newValue);
