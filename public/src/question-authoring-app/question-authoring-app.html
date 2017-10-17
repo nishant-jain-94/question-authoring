@@ -29,9 +29,16 @@
       }
 
       .player {
+        flex: 1;
+        padding: 10px;
         height: 100%;
         width: 50%;
-        display: inline-block;
+      }
+
+      .player-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
       }
 
     </style>
@@ -58,7 +65,7 @@
           <paper-button raised on-click="authorQuestion">Author Question</paper-button>
         </div>
       </div>
-      <div class="container">
+      <div class="player-container">
         <div class="player" id="authoringMode"></div>
         <div class="player" id="playMode"></div>
       </div>
@@ -83,15 +90,11 @@
             type: String 
           },
           player: {
-            type: String
+            type: String,
+            value: 'mcq-player'
           },
           rawMdQuestion: {
-            type: String,
-            observers: '_changedRawMDQuestion'
-          },
-          test: {
-            type: String,
-            value: "# Question \n Test Question"
+            type: String
           }
         }
       }
@@ -106,11 +109,12 @@
         Polymer.importHref(questionAuthoringResolvedUrl);
         Polymer.importHref(questionPlayResolvedUrl);
         this.$.authoringMode.innerHTML = `<${this.player}-authoring-mode id="authoringtool"></${this.player}-authoring-mode>`;
-        const mcqPlayerPlayMode = document.createElement(`${this.player}-play-mode`);
-        this.$.playMode.innerHTML = `<${this.player}-play-mode test="{{test}}" md-assessment-item="[[test]]"></${this.player}-play-mode>`;
-        this.$.authoringMode.getElementsByTagName(`${this.player}-authoring-mode`)[0].addEventListener('questionChanged', function(newValue) {
+        const playerInPlayMode = document.createElement(`${this.player}-play-mode`);
+        this.$.playMode.append(playerInPlayMode);
+        this.$.authoringMode.getElementsByTagName(`${this.player}-authoring-mode`)[0].addEventListener('questionChanged', (newValue) => {
           console.log(newValue);
-          mcqPlayerPlayMode.mdAssessmentItem = newValue.detail.mdQuestion;
+          this.rawMdQuestion =  newValue.detail.mdQuestion;
+          playerInPlayMode.set('mdAssessmentItem', this.rawMdQuestion);
         });
       }
 
@@ -118,7 +122,7 @@
         console.log("Something changed");
       }
 
-      
+
     }
     window.customElements.define(QuestionAuthoringApp.is, QuestionAuthoringApp);
   </script>
