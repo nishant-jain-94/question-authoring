@@ -6,6 +6,7 @@ install:
 - npm install request --save
 before_deploy:
 - "./install-dependencies.js"
+- cat bower.json
 deploy:
   app: vast-basin-44944
   provider: heroku
