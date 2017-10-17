@@ -2,7 +2,7 @@
 const request = require('request');
 const { exec } = require('child_process');
 
-request('https://morning-peak-73646.herokuapp.com/players', (error, response, players) => {
+request('https://morning-peak-73646.herokuapp.com/players/repo', (error, response, players) => {
   console.log(players);
   const bowerDependencies = JSON.parse(players).join(' ');
   console.log(bowerDependencies);
