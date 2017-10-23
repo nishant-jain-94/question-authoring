@@ -5,7 +5,12 @@
     "polymer": "Polymer/polymer#^2.0.0",
     "custom-input-element": "chandrangreat/custom-input-element",
     "paper-button": "PolymerElements/paper-button#^2.0.0",
-    "shadowed-fullpagejs": "nishant-jain-94/fullPage.js#^2.9.5"
+    "shadowed-fullpagejs": "nishant-jain-94/fullPage.js#^2.9.5",
+    "paper-fab": "PolymerElements/paper-fab#^2.0.0",
+    "iron-icons": "PolymerElements/iron-icons#^2.0.1",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^2.0.0",
+    "paper-dialog": "PolymerElements/paper-dialog#^2.0.0",
+    "paper-item": "PolymerElements/paper-item#^2.0.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",

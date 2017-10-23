@@ -1,6 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/custom-input-element/custom-input-element.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="jquery-import.html">
 <link rel="import" href="fullpage-import.html">
 
@@ -41,50 +45,133 @@
 
       .player-section-content-wrapper {
         padding: 30px;
-        display: flex;
+        /* display: flex;
         width: 100%;
         height: 100%;
+        justify-content: space-around; */
+        height: 91%;
+      }
+
+      .player-outer-container{
+        display: flex;
+        width: 100%;
+        height: 550px;
         justify-content: space-around;
       }
 
+      .meta-form {
+        color: black;
+        width: 80%;
+        overflow-y:hidden;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 300;
+        font-size: 2.5em;
+        display: table-cell;
+        vertical-align: middle;
+      }
+
+      .input-element {
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.2em;        
+        font-weight: 700;
+        display: inline-block;
+        border: none;
+        width: auto;
+        background: whitesmoke;
+      }
+      
+      .btn {
+        background-color: black;
+        color: white;
+      }
+
+      .floating-button-container{
+        display: flex;
+        justify-content: center;
+        /* align-content: center; */
+        height: 100%;
+        align-items: center;
+      }
+
+      .fullscreen-dialog{
+        /* position: fixed; */
+        height: 100%;
+        width: 100%;
+        margin: 0px !important;
+      }
+      paper-item.fancy {
+        --paper-item-min-height	: 55px;
+        font-size: 1.5em;
+      }
+      .player-list {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        flex-direction: column;
+      }
     </style>
     <div id="fullpage" class="fullpage">
-      <div class="container section">
-        <div class="section-content-wrapper">
-          <div class="section-content">
-            <custom-input-element class="component" label="Choose a Concept" value="{{concept}}"></custom-input-element>
+        <div class="container section">
+            <div class="section-content-wrapper">
+              <div class="section-content">
+                  <div class="meta-form">
+                    <p>
+                      I want to create a question that explains a 
+                      <span class="input-element" text-content="{{concept::input}}" contenteditable="true">{{concept}}</span> related to the 
+                      <span class="input-element" text-content="{{content::input}}" contenteditable="true">{{content}}</span> with the 
+                      <span class="input-element" text-content="{{expectedOutcome::input}}" contenteditable="true">{{expectedOutcome}}</span>.
+                      <div class="btn-section">
+                        <paper-button class="btn" raised on-click="handleSubmit">Next</paper-button>
+                      </div>
+                    </p>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="container section">
+          <div class="section-content-wrapper">
+            <div class="section-content">
+              <custom-input-element class="component" label="Question Type" value="{{player}}"></custom-input-element>
+              <paper-button raised on-click="authorQuestion">Author Question</paper-button>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="container section">
-        <div class="section-content-wrapper">
-          <div class="section-content">
-            <custom-input-element class="component" label="Choose a Content" value="{{content}}"></custom-input-element>
+        <div class="container section">
+          <div class="player-section-content-wrapper">
+              <dom-if if="{{!shouldDisplay}}">
+                <template>
+                  <div class="player-outer-container">
+                    <div class="player" id="authoringMode"></div>
+                    <div class="player" id="playMode"></div>
+                  </div>
+                </template>
+              </dom-if>
+              <dom-if if={{shouldDisplay}}>
+                <template>
+                  <div class="floating-button-container">
+                    <paper-fab on-click="toggleView" icon="add"></paper-fab>
+                  </div>
+                </template>
+              </dom-if>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="container section">
-        <div class="section-content-wrapper">
-          <div class="section-content">
-            <custom-input-element class="component" label="Expected Outcome" value="{{expectedOutcome}}"></custom-input-element>
+
+      <paper-dialog id="playerDialog" class="fullscreen-dialog">
+        <div class="player-list">
+          <h1>Available Players</h1>
+          <div role="listbox">
+              <paper-item class="fancy">mcq-player</paper-item>
+              <paper-item class="fancy">code-player</paper-item>
+              <paper-item class="fancy">create-player</paper-item>
+              <paper-item class="fancy">meet-player</paper-item>
+              <paper-item class="fancy">great-player</paper-item>
+              <paper-item class="fancy">fate-player</paper-item>
           </div>
         </div>
-      </div>
-      <div class="container section">
-        <div class="section-content-wrapper">
-          <div class="section-content">
-            <custom-input-element class="component" label="Question Type" value="{{player}}"></custom-input-element>
-            <paper-button raised on-click="authorQuestion">Author Question</paper-button>
-          </div>
-        </div>
-      </div>
-      <div class="container section">
-        <div class="player-section-content-wrapper">
-          <div class="player" id="authoringMode"></div>
-          <div class="player" id="playMode"></div>
-        </div>
-      </div>
-    </div>
+      </paper-dialog>
+
   </template>
 
   <script>
@@ -93,13 +180,16 @@
       static get properties() {
         return {
           concept: {
-            type: String
+            type: String,
+            value:'Concept'
           },
           content: {
-            type: String
+            type: String,
+            value:'Content'
           },
           expectedOutcome: {
-            type: String
+            type: String,
+            value:'Expected Outcome'
           },
           questionType: {
             type: String 
@@ -110,6 +200,10 @@
           },
           rawMdQuestion: {
             type: String
+          },
+          shouldDisplay: {
+            type: Boolean,
+            value: true
           }
         }
       }
@@ -131,11 +225,11 @@
         const questionPlayResolvedUrl = this.resolveUrl(`../../bower_components/${this.player}/${this.player}-play-mode/${this.player}-play-mode.html`);
         Polymer.importHref(questionAuthoringResolvedUrl);
         Polymer.importHref(questionPlayResolvedUrl);
-        this.$.authoringMode.innerHTML = `<${this.player}-authoring-mode id="authoringtool"></${this.player}-authoring-mode>`;
+        this.$.fullpage.querySelector('#authoringMode').innerHTML = `<${this.player}-authoring-mode id="authoringtool"></${this.player}-authoring-mode>`;
         const playerInPlayMode = document.createElement(`${this.player}-play-mode`);
-        this.$.playMode.innerHTML = "";
-        this.$.playMode.append(playerInPlayMode);
-        this.$.authoringMode.getElementsByTagName(`${this.player}-authoring-mode`)[0].addEventListener('questionChanged', (newValue) => {
+        this.$.fullpage.querySelector('#playMode').innerHTML = "";
+        this.$.fullpage.querySelector('#playMode').append(playerInPlayMode);
+        this.$.fullpage.querySelector('#authoringMode').getElementsByTagName(`${this.player}-authoring-mode`)[0].addEventListener('questionChanged', (newValue) => {
           console.log(newValue);
           this.rawMdQuestion =  newValue.detail.mdQuestion;
           playerInPlayMode.set('mdAssessmentItem', this.rawMdQuestion);
@@ -144,6 +238,23 @@
 
       _changedRawMDQuestion() {
         console.log("Something changed");
+      }
+
+      handleSubmit() {
+        $.ajax({
+          url: 'question',
+          method: 'POST',
+          data: {
+            'concept': this.concept,
+            'content': this.content,
+            'expectedOutcome': this.expectedOutcome
+          }
+        });
+      }
+
+      toggleView() {
+        // this.set('shouldDisplay',!this.shouldDisplay);
+        this.$.playerDialog.open();
       }
     }
     window.customElements.define(QuestionAuthoringApp.is, QuestionAuthoringApp);
