@@ -4,7 +4,8 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
     "custom-input-element": "chandrangreat/custom-input-element",
-    "paper-button": "PolymerElements/paper-button#^2.0.0"
+    "paper-button": "PolymerElements/paper-button#^2.0.0",
+    "shadowed-fullpagejs": "nishant-jain-94/fullPage.js#^2.9.5"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",

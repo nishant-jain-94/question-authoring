@@ -1,6 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/custom-input-element/custom-input-element.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="jquery-import.html">
+<link rel="import" href="fullpage-import.html">
 
 <dom-module id="question-authoring-app">
   <template>
@@ -14,17 +16,19 @@
         font-family: 'Lato', sans-serif;
       }
 
-      .section, .container {
+      .section-content, .container {
         color: black;        
         height: 100%;
         width: 100%;
       }
 
-      .container {
+      .section-content-wrapper {
         display: table;
+        height: 100%;
+        width: 100%;
       }
 
-      .section {
+      .section-content {
         display: table-cell;
         padding-left: 80px;
         vertical-align: middle;
@@ -35,7 +39,8 @@
         width: 40%;
       }
 
-      .player-container {
+      .player-section-content-wrapper {
+        padding: 30px;
         display: flex;
         width: 100%;
         height: 100%;
@@ -43,31 +48,41 @@
       }
 
     </style>
-    <div class="fullpage">
-      <div class="container">
-        <div class="section">
-          <custom-input-element class="component" label="Choose a Concept" value="{{concept}}"></custom-input-element>
+    <div id="fullpage" class="fullpage">
+      <div class="container section">
+        <div class="section-content-wrapper">
+          <div class="section-content">
+            <custom-input-element class="component" label="Choose a Concept" value="{{concept}}"></custom-input-element>
+          </div>
         </div>
       </div>
-      <div class="container">
-        <div class="section">
-          <custom-input-element class="component" label="Choose a Content" value="{{content}}"></custom-input-element>
+      <div class="container section">
+        <div class="section-content-wrapper">
+          <div class="section-content">
+            <custom-input-element class="component" label="Choose a Content" value="{{content}}"></custom-input-element>
+          </div>
         </div>
       </div>
-      <div class="container">
-        <div class="section">
-          <custom-input-element class="component" label="Expected Outcome" value="{{expectedOutcome}}"></custom-input-element>
+      <div class="container section">
+        <div class="section-content-wrapper">
+          <div class="section-content">
+            <custom-input-element class="component" label="Expected Outcome" value="{{expectedOutcome}}"></custom-input-element>
+          </div>
         </div>
       </div>
-      <div class="container">
-        <div class="section">
-          <custom-input-element class="component" label="Question Type" value="{{player}}"></custom-input-element>
-          <paper-button raised on-click="authorQuestion">Author Question</paper-button>
+      <div class="container section">
+        <div class="section-content-wrapper">
+          <div class="section-content">
+            <custom-input-element class="component" label="Question Type" value="{{player}}"></custom-input-element>
+            <paper-button raised on-click="authorQuestion">Author Question</paper-button>
+          </div>
         </div>
       </div>
-      <div tabindex="5" class="player-container">
-        <div class="player" id="authoringMode"></div>
-        <div class="player" id="playMode"></div>
+      <div class="container section">
+        <div class="player-section-content-wrapper">
+          <div class="player" id="authoringMode"></div>
+          <div class="player" id="playMode"></div>
+        </div>
       </div>
     </div>
   </template>
@@ -101,6 +116,14 @@
 
       connectedCallback() {
         super.connectedCallback();
+        const fullPage = this.$.fullpage;
+        $(document).ready(function() {
+          $(fullPage).fullpage({
+            keyboardScrolling: false,
+            slidesNavigation: true,
+            scrollingSpeed: 500
+          });
+        });
       }
 
       authorQuestion() {
