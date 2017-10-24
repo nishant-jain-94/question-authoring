@@ -108,13 +108,14 @@
         margin: 0px !important;
       }
       paper-item.fancy {
-        --paper-item-min-height	: 55px;
+        --paper-item-min-height	: 80px;
         font-size: 1.5em;
         --paper-item-selected-weight: 700;
         --paper-item-selected: {
-          background-color:black;
+          background-color: black;
           color: white;
         }
+        justify-content: center;
       }
       .player-list {
         display: flex;
@@ -122,6 +123,13 @@
         align-items: center;
         height: 100%;
         flex-direction: column;
+        font-size: 2.5em;
+      }
+      .player-list-inner{
+        width: 640px;
+        text-align: center;
+        justify-content: center;
+        width: 45%;
       }
       .overlay-proceed-btn{
         position: fixed;
@@ -181,15 +189,17 @@
       <paper-dialog id="playerDialog" class="fullscreen-dialog">
         <paper-fab on-click="closePlayerOverlay" class="overlay-close-btn" icon="close"></paper-fab>
         <div class="player-list">
-          <h1>Choose a Player</h1>
-          <paper-listbox class="list-box" attr-for-selected="player" selected="{{player}}">
-              <paper-item player="mcq-player" toggles class="fancy">mcq-player</paper-item>
-              <paper-item player="code -player" toggles class="fancy">code-player</paper-item>
-              <paper-item player="create-player" toggles class="fancy">create-player</paper-item>
-              <paper-item player="meet-player" toggles class="fancy">meet-player</paper-item>
-              <paper-item player="great-player" toggles class="fancy">great-player</paper-item>
-              <paper-item player="fate-player" toggles class="fancy">fate-player</paper-item>
-          </paper-listbox>
+          <div class="player-list-inner">
+            <h1>Choose a Player</h1>
+            <paper-listbox class="list-box" attr-for-selected="player" selected="{{player}}">
+                <paper-item player="mcq-player" toggles class="fancy">mcq-player</paper-item>
+                <paper-item player="code -player" toggles class="fancy">code-player</paper-item>
+                <paper-item player="create-player" toggles class="fancy">create-player</paper-item>
+                <paper-item player="meet-player" toggles class="fancy">meet-player</paper-item>
+                <paper-item player="great-player" toggles class="fancy">great-player</paper-item>
+                <paper-item player="fate-player" toggles class="fancy">fate-player</paper-item>
+            </paper-listbox>
+          </div>
         </div>
         <paper-button class="overlay-proceed-btn" on-click="getSelectedPlayer">Proceed</paper-button>
       </paper-dialog>
