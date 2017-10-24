@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="jquery-import.html">
 <link rel="import" href="fullpage-import.html">
 
@@ -83,6 +84,8 @@
       .btn {
         background-color: black;
         color: white;
+        /* padding: 10px; */
+        font-size: 0.5em;
       }
 
       .floating-button-container{
@@ -91,6 +94,11 @@
         /* align-content: center; */
         height: 100%;
         align-items: center;
+        flex-direction: column;
+      }
+
+      .floating-button-container paper-fab {
+        --paper-fab-background: black;
       }
 
       .fullscreen-dialog{
@@ -102,6 +110,11 @@
       paper-item.fancy {
         --paper-item-min-height	: 55px;
         font-size: 1.5em;
+        --paper-item-selected-weight: 700;
+        --paper-item-selected: {
+          background-color:black;
+          color: white;
+        }
       }
       .player-list {
         display: flex;
@@ -109,6 +122,20 @@
         align-items: center;
         height: 100%;
         flex-direction: column;
+      }
+      .overlay-proceed-btn{
+        position: fixed;
+        right: 40px;
+        bottom: 30px;
+        background: black;
+        color: white;
+        padding: 14px;
+        font-size: 16px;
+      }
+      .overlay-close-btn{
+        background: black;
+        position: fixed;
+        right: 40px;
       }
     </style>
     <div id="fullpage" class="fullpage">
@@ -130,16 +157,8 @@
             </div>
         </div>
         <div class="container section">
-          <div class="section-content-wrapper">
-            <div class="section-content">
-              <custom-input-element class="component" label="Question Type" value="{{player}}"></custom-input-element>
-              <paper-button raised on-click="authorQuestion">Author Question</paper-button>
-            </div>
-          </div>
-        </div>
-        <div class="container section">
           <div class="player-section-content-wrapper">
-              <dom-if if="{{!shouldDisplay}}">
+              <dom-if id="playerTemplate" if="{{!shouldDisplay}}">
                 <template>
                   <div class="player-outer-container">
                     <div class="player" id="authoringMode"></div>
@@ -147,10 +166,11 @@
                   </div>
                 </template>
               </dom-if>
-              <dom-if if={{shouldDisplay}}>
+              <dom-if if="{{shouldDisplay}}">
                 <template>
                   <div class="floating-button-container">
                     <paper-fab on-click="toggleView" icon="add"></paper-fab>
+                    <h1>Add a Player</h1>
                   </div>
                 </template>
               </dom-if>
@@ -159,17 +179,19 @@
         </div>
 
       <paper-dialog id="playerDialog" class="fullscreen-dialog">
+        <paper-fab on-click="closePlayerOverlay" class="overlay-close-btn" icon="close"></paper-fab>
         <div class="player-list">
-          <h1>Available Players</h1>
-          <div role="listbox">
-              <paper-item class="fancy">mcq-player</paper-item>
-              <paper-item class="fancy">code-player</paper-item>
-              <paper-item class="fancy">create-player</paper-item>
-              <paper-item class="fancy">meet-player</paper-item>
-              <paper-item class="fancy">great-player</paper-item>
-              <paper-item class="fancy">fate-player</paper-item>
-          </div>
+          <h1>Choose a Player</h1>
+          <paper-listbox class="list-box" attr-for-selected="player" selected="{{player}}">
+              <paper-item player="mcq-player" toggles class="fancy">mcq-player</paper-item>
+              <paper-item player="code -player" toggles class="fancy">code-player</paper-item>
+              <paper-item player="create-player" toggles class="fancy">create-player</paper-item>
+              <paper-item player="meet-player" toggles class="fancy">meet-player</paper-item>
+              <paper-item player="great-player" toggles class="fancy">great-player</paper-item>
+              <paper-item player="fate-player" toggles class="fancy">fate-player</paper-item>
+          </paper-listbox>
         </div>
+        <paper-button class="overlay-proceed-btn" on-click="getSelectedPlayer">Proceed</paper-button>
       </paper-dialog>
 
   </template>
@@ -195,8 +217,7 @@
             type: String 
           },
           player: {
-            type: String,
-            value: 'mcq-player'
+            type: String
           },
           rawMdQuestion: {
             type: String
@@ -256,6 +277,18 @@
         // this.set('shouldDisplay',!this.shouldDisplay);
         this.$.playerDialog.open();
       }
+
+      getSelectedPlayer(){
+        this.$.playerDialog.close();
+        this.set('shouldDisplay',false);
+        this.$.playerTemplate.render();
+        this.authorQuestion();
+      }
+
+      closePlayerOverlay() {
+        this.$.playerDialog.close();
+      }
+
     }
     window.customElements.define(QuestionAuthoringApp.is, QuestionAuthoringApp);
   </script>
