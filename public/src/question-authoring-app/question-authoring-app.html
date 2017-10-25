@@ -63,6 +63,7 @@
         width: 100%;
         height: 550px;
         justify-content: space-around;
+        overflow-y: auto;
       }
 
       .meta-form {
@@ -220,7 +221,7 @@
                       <span class="input-element" id="content" on-click="openContentSearchDiaog" text-content="{{content.displayName::input}}" contenteditable="true">{{getDefaultContentValue()}}</span> with the 
                       <span class="input-element" id="expectedOutcome" on-click="openExpectedOutcomeDialog" text-content="{{expectedOutcome::input}}" contenteditable="true">{{expectedOutcome}}</span>.
                       <div class="btn-section">
-                        <paper-button class="btn" raised on-click="handleSubmit">Next</paper-button>
+                        <paper-button class="btn" raised on-click="changeSlide">Next</paper-button>
                       </div>
                     </p>
                   </div>
@@ -392,6 +393,7 @@
             slidesNavigation: true,
             scrollingSpeed: 500
           });
+          $.fn.fullpage.setAllowScrolling(false);
         });
       }
 
@@ -545,6 +547,10 @@
       onExpectedOutcomeChanged() {
         console.log(this.expectedOutcome);
         this.$.expectedOutcomeDialog.close();
+      }
+
+      changeSlide() {
+        jQuery.fn.fullpage.moveSectionDown();
       }
 
     }
