@@ -4,9 +4,9 @@
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="web-animations-import.html">
+<link rel="import" href="../../bower_components/web-animations-js/web-animations-next-lite.min.html">
 <link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
-<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-down-animation.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
@@ -249,7 +249,7 @@
           </div>
         </div>
 
-      <paper-dialog id="playerDialog" class="fullscreen-dialog">
+      <paper-dialog id="playerDialog" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
           <span class="overlay-close-btn-container">
             <paper-icon-button on-click="closePlayerOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
           </span>
@@ -269,7 +269,7 @@
         <paper-button class="overlay-proceed-btn" on-click="getSelectedPlayer">Proceed</paper-button>
       </paper-dialog>
 
-      <paper-dialog id="contentSearchDialog" class="fullscreen-dialog">
+      <paper-dialog id="contentSearchDialog" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
           <span class="overlay-close-btn-container">
               <paper-icon-button on-click="closeContentSearchOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
             </span>
@@ -292,7 +292,7 @@
         <!-- <paper-button class="search-overlay-apply-btn" on-click="applySelectedContent">Apply</paper-button>         -->
       </paper-dialog>
 
-      <paper-dialog id="conceptSearchDialog" class="fullscreen-dialog">
+      <paper-dialog id="conceptSearchDialog" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
         <span class="overlay-close-btn-container">
           <paper-icon-button on-click="closeConceptSearchOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
         </span>
@@ -315,7 +315,7 @@
         <!-- <paper-button class="search-overlay-apply-btn" on-click="applySelectedConcept">Apply</paper-button>         -->
       </paper-dialog>
 
-      <paper-dialog id="expectedOutcomeDialog" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <paper-dialog id="expectedOutcomeDialog" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
         <span class="overlay-close-btn-container">
           <paper-icon-button on-click="closeExpectedOutcomeOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
         </span>
