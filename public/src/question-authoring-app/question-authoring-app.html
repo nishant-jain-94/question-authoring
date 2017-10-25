@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/custom-input-element/custom-input-element.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
@@ -146,10 +147,16 @@
         font-size: 16px;
       }
 
-      .overlay-close-btn{
-        background: black;
+      .overlay-close-btn-container{
         position: fixed;
         right: 40px;
+        --paper-icon-button: {}
+      }
+
+      .overlay-close-btn{
+        color: black;
+        width: 70px;
+        height: 70px;
       }
 
       .resultsContainer {
@@ -158,7 +165,7 @@
         margin: auto;
         max-height: 70%;
         flex-flow: row wrap;
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden;
       }
 
@@ -184,6 +191,16 @@
           font-size: 2em;
           line-height: 45px;
         }
+      }
+
+      .search-overlay-apply-btn{
+        position: fixed;
+        right: 34px;
+        bottom: 0px;
+        background: black;
+        color: white;
+        padding: 14px;
+        font-size: 16px;
       }
 
     </style>
@@ -228,7 +245,9 @@
         </div>
 
       <paper-dialog id="playerDialog" class="fullscreen-dialog">
-        <paper-fab on-click="closePlayerOverlay" class="overlay-close-btn" icon="close"></paper-fab>
+          <span class="overlay-close-btn-container">
+            <paper-icon-button on-click="closePlayerOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
+          </span>
         <div class="player-list">
           <div class="player-list-inner">
             <h1>Choose a Player</h1>
@@ -246,6 +265,9 @@
       </paper-dialog>
 
       <paper-dialog id="contentSearchDialog" class="fullscreen-dialog">
+          <span class="overlay-close-btn-container">
+              <paper-icon-button on-click="closeContentSearchOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
+            </span>
         <paper-input class="search-field" value="{{content}}" on-keyup="onContentValueChanged">
           <iron-icon icon="search" slot="suffix"></iron-icon>
         </paper-input>
@@ -262,12 +284,30 @@
             </template>
           </dom-repeat>
         </div>
+        <paper-button class="search-overlay-apply-btn" on-click="applySelectedContent">Apply</paper-button>        
       </paper-dialog>
 
       <paper-dialog id="conceptSearchDialog" class="fullscreen-dialog">
-        <paper-input class="search-field" value="{{concept}}" on-keyup="onConceptValueChanged" label="Search">
+          <span class="overlay-close-btn-container">
+              <paper-icon-button on-click="closeConceptSearchOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
+            </span>
+        <paper-input class="search-field" value="{{concept}}" on-keyup="onConceptValueChanged">
           <iron-icon icon="search" slot="suffix"></iron-icon>
         </paper-input>
+        <div class="resultsContainer">
+          <dom-repeat items="{{conceptSearchResults}}" as="concept">
+            <template>
+              <paper-card class="resultItem">
+                <div class="card-content">
+                  <div class="card-header">
+                    {{concept.clippedDisplayName}}
+                  </div>
+                </div>
+              </paper-card>
+            </template>
+          </dom-repeat>
+        </div>
+        <paper-button class="search-overlay-apply-btn" on-click="applySelectedConcept">Apply</paper-button>        
       </paper-dialog>
 
   </template>
@@ -376,9 +416,17 @@
         this.$.contentSearchDialog.open();
       }
 
+      closeContentSearchOverlay() {
+        this.$.contentSearchDialog.close();
+      }
+
       openConceptSearchDiaog(e) {
         const args = e.target.id;
         this.$.conceptSearchDialog.open();
+      }
+
+      closeConceptSearchOverlay() {
+        this.$.conceptSearchDialog.close();
       }
 
       onContentValueChanged() {
@@ -405,7 +453,26 @@
       };
 
       onConceptValueChanged() {
-        console.log(this.concept);
+        if(this.concept.length > 3) {
+          console.log(this.concept);
+          $.ajax({
+            url: 'http://192.168.1.3:3000/concepts/search',
+            method: 'POST',
+            data: {
+              "searchTerm": this.concept
+            },
+            success: (results) => {
+              const transformedResults = results.map((result) => {
+                result.clippedDisplayName = result.displayName.slice(0, 50);
+                return result;
+              });
+              this.set('conceptSearchResults', transformedResults);
+            },
+            error: (error) => {
+              console.log(error);
+            }
+          });
+        }
       };
 
     }
