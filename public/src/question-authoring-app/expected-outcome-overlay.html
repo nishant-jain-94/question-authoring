@@ -1,0 +1,92 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="overlay-element.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+
+<dom-module id="expected-outcome-overlay">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      paper-item.fancy {
+        --paper-item-min-height	: 65px;
+        font-size: 1.5em;
+        --paper-item-selected-weight: 700;
+        --paper-item-selected: {
+          background-color: black;
+          color: white;
+        }
+        justify-content: center;
+      }
+
+      .player-list, .expected-outcome-list {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        flex-direction: column;
+        font-size: 1.5em;
+      }
+
+      .player-list-inner, .expected-outcome-inner{
+        width: 640px;
+        text-align: center;
+        justify-content: center;
+        width: 45%;
+      }
+    </style>
+    <overlay-element id="expectedOutcomeOverlay">              
+      <div class="expected-outcome-list">
+        <div class="expected-outcome-list-inner">
+          <h1>Choose Expected Outcome</h1>
+          <paper-listbox class="list-box" attr-for-selected="expected-outcome" selected="{{expectedOutcome}}">
+              <paper-item expected-outcome="Remember" class="fancy">Remember</paper-item>
+              <paper-item expected-outcome="Comprehend" class="fancy">Comprehend</paper-item>
+              <paper-item expected-outcome="Apply" class="fancy">Apply</paper-item>
+              <paper-item expected-outcome="Analyze" class="fancy">Analyze</paper-item>
+              <paper-item expected-outcome="Synthesize" class="fancy">Synthesize</paper-item>
+              <paper-item expected-outcome="Evaluate" class="fancy">Evaluate</paper-item>
+          </paper-listbox>
+        </div>
+      </div>
+    </overlay-element>
+  </template>
+
+  <script>
+    /**
+     * `expectedOutcome-overlay`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ExpectedOutcomeOverlay extends Polymer.Element {
+      static get is() { return 'expected-outcome-overlay'; }
+      static get properties() {
+        return {
+          expectedOutcome: {
+            type: String,
+            observer: 'onExpectedOutcomeChanged',
+            notify: true
+          }
+        };
+      }
+
+      openExpectedOutcomeOverlay() {
+        this.$.expectedOutcomeOverlay.openOverlay();
+      }
+
+      onExpectedOutcomeChanged() {
+        this.$.expectedOutcomeOverlay.closeOverlay();
+      }
+
+      closeExpectedOutcomeOverlay() {
+        this.$.expectedOutcomeOverlay.closeOverlay();
+      }
+    }
+
+    window.customElements.define(ExpectedOutcomeOverlay.is, ExpectedOutcomeOverlay);
+  </script>
+</dom-module>

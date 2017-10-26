@@ -1,0 +1,58 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="content-search-overlay.html">
+
+<dom-module id="content-field">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+      }
+      .input-element {
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.2em;        
+        font-weight: 700;
+        display: inline-block;
+        border: none;
+        width: auto;
+        background: whitesmoke;
+      }
+    </style>
+    <span class="input-element" id="content" on-click="openContentSearchDialog" text-content="{{content.displayName::input}}" contenteditable="true">{{getDefaultContentValue()}}</span>                          
+    <content-search-overlay id="contentSearchOverlay"></content-search-overlay>
+  </template>
+
+  <script>
+    /**
+     * `content-field`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ContentField extends Polymer.Element {
+      static get is() { return 'content-field'; }
+      static get properties() {
+        return {
+          content: {
+            type: Object
+          }
+        };
+      }
+
+      getDefaultContentValue() {
+        if(typeof this.content !== 'undefined'){
+          return this.content.displayName;
+        }
+        else return "Content";
+      }
+
+      openContentSearchDialog() {
+        this.$.contentSearchOverlay.openContentSearchOverlay()
+      }
+
+    }
+
+    window.customElements.define(ContentField.is, ContentField);
+  </script>
+</dom-module>

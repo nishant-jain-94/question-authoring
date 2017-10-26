@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="expected-outcome-overlay.html">
+
+<dom-module id="expected-outcome-field">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+      }
+      .input-element {
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.2em;        
+        font-weight: 700;
+        display: inline-block;
+        border: none;
+        width: auto;
+        background: whitesmoke;
+      }
+    </style>
+    <span class="input-element" id="expectedOutcome" on-click="openExpectedOutcomeDialog" text-content="{{expectedOutcome::input}}" contenteditable="true">{{expectedOutcome}}</span>                          
+    <expected-outcome-overlay expected-outcome="{{expectedOutcome}}" id="expectedOutcomeOverlay"></expected-outcome-overlay>
+  </template>
+
+  <script>
+    /**
+     * `expected-outcome-field`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ExpectedOutcomeField extends Polymer.Element {
+      static get is() { return 'expected-outcome-field'; }
+      static get properties() {
+        return {
+          expectedOutcome: {
+            type: String,
+            value:'Expected Outcome',
+            notify: true
+            // observer: 'onExpectedOutcomeChanged'
+          }
+        };
+      }
+
+      openExpectedOutcomeDialog() {
+        this.$.expectedOutcomeOverlay.openExpectedOutcomeOverlay();
+      }
+    }
+
+    window.customElements.define(ExpectedOutcomeField.is, ExpectedOutcomeField);
+  </script>
+</dom-module>

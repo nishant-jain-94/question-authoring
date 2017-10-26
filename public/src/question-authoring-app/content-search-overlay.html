@@ -1,0 +1,112 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="overlay-element.html">
+
+<dom-module id="content-search-overlay">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .resultsContainer {
+        display: flex;
+        width: 90%;
+        margin: auto;
+        max-height: 70%;
+        flex-flow: row wrap;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .resultItem {
+        margin: 10px;
+        height: 70px;
+        width: 100%;
+        font-size: 1.5em;
+        padding: 10px;
+      }
+
+      .search-field {
+        width: 70%;
+        margin: auto;
+        padding: auto;
+        margin-top: 20px;
+        --paper-input-container-input: {
+          font-size: 2em;
+          font-weight: bold;
+        }
+        --paper-input-container-focus-color: black;
+        --paper-input-container-label: {
+          font-size: 2em;
+          line-height: 45px;
+        }
+      }
+
+      .search-overlay-apply-btn{
+        position: fixed;
+        right: 34px;
+        bottom: 0px;
+        background: black;
+        color: white;
+        padding: 14px;
+        font-size: 16px;
+      }
+    </style>
+    <overlay-element id="contentSearchOverlay">
+      <paper-input class="search-field" value="{{contentSearchValue}}" on-keyup="onContentValueChanged">
+        <iron-icon icon="search" slot="suffix"></iron-icon>
+      </paper-input>
+      <div class="resultsContainer">
+        <dom-repeat items="{{contentSearchResults}}" as="content">
+          <template>
+            <paper-card class="resultItem" data-content="{{content}}" on-click="onContentCardClicked">
+              <div class="card-content">
+                <div class="card-header">
+                  {{content.clippedDisplayName}}
+                </div>
+              </div>
+            </paper-card>
+          </template>
+        </dom-repeat>
+      </div>
+    </overlay-element>
+  </template>
+
+  <script>
+    /**
+     * `content-search-overlay`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ContentSearchOverlay extends Polymer.Element {
+      static get is() { return 'content-search-overlay'; }
+      static get properties() {
+        return {
+          content: {
+            type: Object
+          },
+          contentSearchValue: {
+            type: String
+          }
+        };
+      }
+
+      constructor() {
+        super();
+        this.contentSearchResults = [];
+      }
+
+      openContentSearchOverlay() {
+        this.$.contentSearchOverlay.openOverlay();
+      }
+
+    }
+
+    window.customElements.define(ContentSearchOverlay.is, ContentSearchOverlay);
+  </script>
+</dom-module>

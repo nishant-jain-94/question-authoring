@@ -1,0 +1,135 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="overlay-element.html">
+
+
+<dom-module id="concept-search-overlay">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .resultsContainer {
+        display: flex;
+        width: 90%;
+        margin: auto;
+        max-height: 70%;
+        flex-flow: row wrap;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .resultItem {
+        margin: 10px;
+        height: 70px;
+        width: 100%;
+        font-size: 1.5em;
+        padding: 10px;
+      }
+
+      .search-field {
+        width: 70%;
+        margin: auto;
+        padding: auto;
+        margin-top: 20px;
+        --paper-input-container-input: {
+          font-size: 2em;
+          font-weight: bold;
+        }
+        --paper-input-container-focus-color: black;
+        --paper-input-container-label: {
+          font-size: 2em;
+          line-height: 45px;
+        }
+      }
+
+      .search-overlay-apply-btn{
+        position: fixed;
+        right: 34px;
+        bottom: 0px;
+        background: black;
+        color: white;
+        padding: 14px;
+        font-size: 16px;
+      }
+    </style>
+    <overlay-element id="conceptSearchOverlay">
+      <paper-input class="search-field" value="{{conceptSearchValue}}" on-keyup="onConceptValueChanged">
+        <iron-icon icon="search" slot="suffix"></iron-icon>
+      </paper-input>
+      <div class="resultsContainer">
+        <dom-repeat items="{{conceptSearchResults}}" as="concept">
+          <template>
+            <paper-card data-concept="{{concept}}" on-click="onConceptCardClicked" class="resultItem">
+              <div class="card-content">
+                <div class="card-header">
+                  {{concept.clippedDisplayName}}
+                </div>
+              </div>
+            </paper-card>
+          </template>
+        </dom-repeat>
+      </div>
+    </overlay-element>
+  </template>
+
+  <script>
+    class ConceptSearchOverlay extends Polymer.Element {
+      static get is() { return 'concept-search-overlay'; }
+      static get properties() {
+        return {
+          conceptSearchValue: {
+            type: String
+          },
+          concept: {
+            type: Object,
+            notify: true
+          }
+        };
+      }
+
+      constructor() {
+        super();
+        this.conceptSearchResults = [];
+      }
+
+      openConceptSearchOverlay() {
+        if(typeof this.concept !== 'undefined') {
+          this.conceptSearchValue = this.concept.displayName;
+        }
+        this.$.conceptSearchOverlay.openOverlay();
+      }
+
+      onConceptCardClicked(e) {
+        this.set('concept', e.currentTarget.dataConcept);
+        this.$.conceptSearchOverlay.closeOverlay();
+      };
+
+      onConceptValueChanged() {
+        if(this.conceptSearchValue.length > 3) {
+          $.ajax({
+            url: 'http://192.168.1.3:3000/concepts/search',
+            method: 'POST',
+            data: {
+              "searchTerm": this.conceptSearchValue
+            },
+            success: (results) => {
+              const transformedResults = results.map((result) => {
+                result.clippedDisplayName = result.displayName.slice(0, 50);
+                return result;
+              });
+              this.set('conceptSearchResults', transformedResults);
+            },
+            error: (error) => {
+              console.log(error);
+            }
+          });
+        }
+      };
+
+    }
+
+    window.customElements.define(ConceptSearchOverlay.is, ConceptSearchOverlay);
+  </script>
+</dom-module>

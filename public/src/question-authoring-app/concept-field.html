@@ -1,0 +1,59 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="concept-search-overlay.html">
+
+<dom-module id="concept-field">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+      }
+      .input-element {
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.2em;        
+        font-weight: 700;
+        display: inline-block;
+        border: none;
+        width: auto;
+        background: whitesmoke;
+      }
+    </style>
+    <span class="input-element" id="concept" on-click="openConceptSearchDiaog" text-content="{{concept.displayName::input}}" contenteditable="true">{{getDefaultConceptValue()}}</span>
+    <concept-search-overlay concept="{{concept}}" id="conceptSearchOverlay"></concept-search-overlay>
+  </template>
+
+  <script>
+    /**
+     * `concept-field`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ConceptField extends Polymer.Element {
+      static get is() { return 'concept-field'; }
+      static get properties() {
+        return {
+          concept: {
+            type: Object,
+            notify: true
+          }
+        };
+      }
+
+      getDefaultConceptValue() {
+        if(typeof this.concept !== 'undefined'){
+          return this.concept.displayName;
+        }
+        else return "Concept";
+      }
+
+      openConceptSearchDiaog() {
+        this.$.conceptSearchOverlay.openConceptSearchOverlay()
+      }
+
+    }
+
+    window.customElements.define(ConceptField.is, ConceptField);
+  </script>
+</dom-module>
