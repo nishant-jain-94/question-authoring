@@ -1,17 +1,26 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/custom-input-element/custom-input-element.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/web-animations-js/web-animations-next-lite.min.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-down-animation.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="jquery-import.html">
 <link rel="import" href="fullpage-import.html">
 
 <dom-module id="question-authoring-app">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900">
   <template>
     <style>
-      @import url('https://fonts.googleapis.com/css?family=Lato:300,400,700,900');
       .fullpage {
         width: 100%;
         height: 100%;
-        /* overflow: hidden; */
         background: white;
         font-family: 'Lato', sans-serif;
       }
@@ -31,6 +40,7 @@
       .section-content {
         display: table-cell;
         padding-left: 80px;
+        padding-right: 80px;
         vertical-align: middle;
       }
 
@@ -41,50 +51,338 @@
 
       .player-section-content-wrapper {
         padding: 30px;
-        display: flex;
-        width: 100%;
-        height: 100%;
-        justify-content: space-around;
+        height: 91%;
       }
 
+      .player-outer-container{
+        display: flex;
+        width: 100%;
+        height: 90%;
+        justify-content: space-around;
+        overflow-y: auto;
+      }
+
+      .meta-form {
+        color: black;
+        width: 80%;
+        overflow-y:hidden;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 300;
+        font-size: 2.5em;
+        display: table-cell;
+        vertical-align: middle;
+      }
+
+      .input-element {
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.2em;        
+        font-weight: 700;
+        display: inline-block;
+        border: none;
+        width: auto;
+        background: whitesmoke;
+      }
+      
+      .btn {
+        background-color: black;
+        color: white;
+        /* padding: 10px; */
+        font-size: 0.5em;
+      }
+
+      .floating-button-container{
+        display: flex;
+        justify-content: center;
+        height: 100%;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .floating-button-container paper-fab {
+        --paper-fab-background: black;
+      }
+
+      .fullscreen-dialog{
+        height: 100%;
+        width: 100%;
+        margin: 0px !important;
+      }
+
+      paper-item.fancy {
+        --paper-item-min-height	: 65px;
+        font-size: 1.5em;
+        --paper-item-selected-weight: 700;
+        --paper-item-selected: {
+          background-color: black;
+          color: white;
+        }
+        justify-content: center;
+      }
+
+      .player-list, .expected-outcome-list {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        flex-direction: column;
+        font-size: 1.5em;
+      }
+
+      .player-list-inner, .expected-outcome-inner{
+        width: 640px;
+        text-align: center;
+        justify-content: center;
+        width: 45%;
+      }
+
+      .overlay-proceed-btn{
+        position: fixed;
+        right: 40px;
+        bottom: 30px;
+        background: black;
+        color: white;
+        padding: 14px;
+        font-size: 16px;
+      }
+
+      .overlay-close-btn-container{
+        position: fixed;
+        right: 30px;
+        top: 15px;
+        margin: 0;
+        padding: 0;
+      }
+
+      .overlay-close-btn{
+        color: #c2c2c2;
+        width: 50px;
+        height: 50px;
+      }
+
+      .resultsContainer {
+        display: flex;
+        width: 90%;
+        margin: auto;
+        max-height: 80%;
+        flex-flow: row wrap;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .resultItem {
+        margin: 10px;
+        height: 70px;
+        width: 100%;
+        font-size: 1.5em;
+        padding: 10px;
+      }
+
+      .search-field {
+        width: 70%;
+        margin: auto;
+        padding: auto;
+        margin-top: 20px;
+        --paper-input-container-input: {
+          font-size: 2em;
+          font-weight: bold;
+        }
+        --paper-input-container-focus-color: black;
+        --paper-input-container-label: {
+          font-size: 2em;
+          line-height: 45px;
+        }
+      }
+
+      .search-overlay-apply-btn{
+        position: fixed;
+        right: 34px;
+        bottom: 0px;
+        background: black;
+        color: white;
+        padding: 14px;
+        font-size: 16px;
+      }
+
+      .app-title {
+        font-size: 2.5em;
+        font-weight: bold;
+        text-transform: underline;
+      }
+
+      .app-title-mini {
+        font-size: 2em;
+        font-weight: bold;
+        text-transform: underline;
+        position: relative;
+        bottom: 30px;
+        width: 100%;
+        text-align: center;
+        display: block;
+      }
     </style>
     <div id="fullpage" class="fullpage">
       <div class="container section">
         <div class="section-content-wrapper">
           <div class="section-content">
-            <custom-input-element class="component" label="Choose a Concept" value="{{concept}}"></custom-input-element>
-          </div>
-        </div>
-      </div>
-      <div class="container section">
-        <div class="section-content-wrapper">
-          <div class="section-content">
-            <custom-input-element class="component" label="Choose a Content" value="{{content}}"></custom-input-element>
-          </div>
-        </div>
-      </div>
-      <div class="container section">
-        <div class="section-content-wrapper">
-          <div class="section-content">
-            <custom-input-element class="component" label="Expected Outcome" value="{{expectedOutcome}}"></custom-input-element>
-          </div>
-        </div>
-      </div>
-      <div class="container section">
-        <div class="section-content-wrapper">
-          <div class="section-content">
-            <custom-input-element class="component" label="Question Type" value="{{player}}"></custom-input-element>
-            <paper-button raised on-click="authorQuestion">Author Question</paper-button>
+            <span class="app-title">Scribe</span>
+            <div class="meta-form">
+              <p>
+                I want to create a question that explains the concept
+                <span class="input-element" id="concept" on-click="openConceptSearchDiaog" text-content="{{concept.displayName::input}}" contenteditable="true">{{getDefaultConceptValue()}}</span> using the content 
+                <span class="input-element" id="content" on-click="openContentSearchDiaog" text-content="{{content.displayName::input}}" contenteditable="true">{{getDefaultContentValue()}}</span> with the intent that someone should be able to
+                <span class="input-element" id="expectedOutcome" on-click="openExpectedOutcomeDialog" text-content="{{expectedOutcome::input}}" contenteditable="true">{{expectedOutcome}}</span> it.
+                <div class="btn-section">
+                  <paper-button class="btn" raised on-click="changeSlide">Next</paper-button>
+                </div>
+              </p>
+            </div>
           </div>
         </div>
       </div>
       <div class="container section">
         <div class="player-section-content-wrapper">
-          <div class="player" id="authoringMode"></div>
-          <div class="player" id="playMode"></div>
+          <dom-if id="playerTemplate" if="{{!shouldDisplay}}">
+            <template>
+              <div class="player-outer-container">
+                <div class="player" id="authoringMode"></div>
+                <div class="player" id="playMode"></div>
+              </div>
+            </template>
+          </dom-if>
+          <dom-if if="{{shouldDisplay}}">
+            <template>
+              <div class="floating-button-container">
+                <paper-fab on-click="toggleView" icon="add"></paper-fab>
+                <h1>Add a Player</h1>
+              </div>
+            </template>
+          </dom-if>
         </div>
+        <span class="app-title-mini">Scribe</span>
       </div>
     </div>
+    
+    <!-- Player Selection Dialog Template -->
+    <paper-dialog id="playerDialogBox" opened="{{playerDialog.opened}}" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
+      <!-- Close button to close the Player Selection Dialog -->
+      <span class="overlay-close-btn-container">
+        <paper-icon-button on-click="closePlayerOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
+      </span>
+      <!-- End of Close button -->
+
+      <!-- A list of available players -->
+      <div class="player-list">
+        <div class="player-list-inner">
+          <h1>Choose a Player</h1>
+          <paper-listbox class="list-box" attr-for-selected="player" selected="{{playerDialog.player}}">
+            <paper-item player="mcq-player" toggles class="fancy">mcq-player</paper-item>
+            <paper-item player="code -player" toggles class="fancy">code-player</paper-item>
+            <paper-item player="create-player" toggles class="fancy">create-player</paper-item>
+            <paper-item player="meet-player" toggles class="fancy">meet-player</paper-item>
+            <paper-item player="great-player" toggles class="fancy">great-player</paper-item>
+            <paper-item player="fate-player" toggles class="fancy">fate-player</paper-item>
+          </paper-listbox>
+        </div>
+      </div>
+      <!-- End of list of available players  -->
+      <paper-button class="overlay-proceed-btn" on-click="getSelectedPlayer">Proceed</paper-button>
+    </paper-dialog>
+    <!-- End of Player Selection Dialog Template -->
+    
+    <!-- Content Search Dialog Template -->
+    <paper-dialog id="contentSearchDialogBox" opened="{{contentSearchDialog.opened}}" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
+      
+      <!-- Close button on the paper-dialog to close the Content Search Dialog Template -->
+      <span class="overlay-close-btn-container">
+        <paper-icon-button on-click="closeContentSearchDialog" class="overlay-close-btn" icon="close"></paper-icon-button>
+      </span>
+      <!-- End of close button -->
+
+      <!-- Search box to search a Content -->
+      <!-- on-keyup="onContentValueChanged" -->
+      <paper-input class="search-field" placeholder="Search for a Content" value="{{contentSearchDialog.contentSearchValue}}">
+        <iron-icon icon="search" slot="suffix"></iron-icon>
+      </paper-input>
+      <!-- End of Search box -->
+
+      <!-- Result container to display contents -->
+      <div class="resultsContainer">
+        <dom-repeat items="{{contentSearchDialog.contentSearchResults}}" as="content">
+          <template>
+            <paper-card class="resultItem" data-content="{{content}}" on-click="onContentCardClicked">
+              <div class="card-content">
+                <div class="card-header">
+                  {{content.clippedDisplayName}}
+                </div>
+              </div>
+            </paper-card>
+          </template>
+        </dom-repeat>
+      </div>
+      <!-- End of result container -->
+
+    </paper-dialog>
+    <!-- End of Content Search Dialog Template -->
+    
+    <!-- Concept Search Dialog Template -->
+    <paper-dialog id="conceptSearchDialogBox" opened="{{conceptSearchDialog.opened}}" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
+      <!-- Close button on the paper-dialog to close Concept Dialog -->
+      <span class="overlay-close-btn-container">
+        <paper-icon-button on-click="closeConceptSearchDialog" class="overlay-close-btn" icon="close"></paper-icon-button>
+      </span>
+      <!-- End of Close button -->
+
+      <!-- Search box to search a Concept -->
+      <paper-input class="search-field" placeholder="Search for a Concept" value="{{conceptSearchDialog.conceptSearchValue}}">
+        <iron-icon icon="search" slot="suffix"></iron-icon>
+      </paper-input>
+      <!-- End of search box -->
+
+      <!-- Result Container to contain all the Concepts -->
+      <div class="resultsContainer">
+        <dom-repeat items="{{conceptSearchDialog.conceptSearchResults}}" as="concept">
+          <template>
+            <paper-card data-concept="{{concept}}" on-click="onConceptCardClicked" class="resultItem">
+              <div class="card-content">
+                <div class="card-header">
+                  {{concept.clippedDisplayName}}
+                </div>
+              </div>
+            </paper-card>
+          </template>
+        </dom-repeat>
+      </div>
+      <!-- End of Result Container -->
+    </paper-dialog>
+    <!-- End of Concept Search Dialog Template -->
+    
+    <!-- Expected Outcome Dialog Template -->
+    <paper-dialog id="expectedOutcomeDialogBox" opened="{{expectedOutcomeDialog.opened}}" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
+      
+      <!-- Close button on the Paper Dialog for Expected Outcome -->
+      <span class="overlay-close-btn-container">
+        <paper-icon-button on-click="closeExpectedOutcomeDialog" class="overlay-close-btn" icon="close"></paper-icon-button>
+      </span>
+      <!-- End of Close button -->
+
+      <!-- List of Expected Outcomes -->
+      <div class="expected-outcome-list">
+        <div class="expected-outcome-list-inner">
+          <h1>Choose Expected Outcome</h1>
+          <paper-listbox class="list-box" attr-for-selected="expected-outcome" selected="{{expectedOutcomeDialog.expectedOutcome}}">
+            <paper-item expected-outcome="Remember" class="fancy">Remember</paper-item>
+            <paper-item expected-outcome="Comprehend" class="fancy">Comprehend</paper-item>
+            <paper-item expected-outcome="Apply" class="fancy">Apply</paper-item>
+            <paper-item expected-outcome="Analyze" class="fancy">Analyze</paper-item>
+            <paper-item expected-outcome="Synthesize" class="fancy">Synthesize</paper-item>
+            <paper-item expected-outcome="Evaluate" class="fancy">Evaluate</paper-item>
+          </paper-listbox>
+        </div>
+      </div>
+      <!-- End of Expected Outcomes -->
+
+    </paper-dialog>
+    <!-- End of Expected Outcome Dialog Template -->
   </template>
 
   <script>
@@ -93,25 +391,73 @@
       static get properties() {
         return {
           concept: {
-            type: String
+            type: Object
           },
           content: {
-            type: String
+            type: Object
           },
           expectedOutcome: {
-            type: String
+            type: String,
+            value:'Expected Outcome'
           },
           questionType: {
             type: String 
           },
-          player: {
-            type: String,
-            value: 'mcq-player'
+          playerDialog: {
+            type: Object,
+            value: function() {
+              return  {
+                opened: false,
+                player: ''
+              }
+            }
           },
           rawMdQuestion: {
             type: String
+          },
+          shouldDisplay: {
+            type: Boolean,
+            value: true
+          },
+          contentSearchDialog: {
+            type: Object,
+            value: function() {
+              return {
+                opened: false,
+                contentSearchValue: '',
+                contentSearchResults: []
+              }
+            }
+          },
+          conceptSearchDialog: {
+            type: Object,
+            value: function() {
+              return {
+                opened: false,
+                conceptSearchValue: '',
+                conceptSearchResults: []
+              }
+            }
+          },
+          expectedOutcomeDialog: {
+            type: Object,
+            value: function() {  
+              return {
+                opened: false,
+                expectedOutcome: 'Expected Outcome'
+              }
+            }
           }
         }
+      }
+
+      static get observers() {
+        return [
+          '_contentSearchValueChanged(contentSearchDialog.contentSearchValue)',
+          '_conceptSearchValueChanged(conceptSearchDialog.conceptSearchValue)',
+          '_expectedOutcomeChanged(expectedOutcomeDialog.expectedOutcome)',
+          '_playerChanged(playerDialog.player)'
+        ];
       }
 
       connectedCallback() {
@@ -123,28 +469,209 @@
             slidesNavigation: true,
             scrollingSpeed: 500
           });
+          $.fn.fullpage.setAllowScrolling(false);
         });
       }
 
-      authorQuestion() {
-        const questionAuthoringResolvedUrl = this.resolveUrl(`../../bower_components/${this.player}/${this.player}-authoring-mode/${this.player}-authoring-mode.html`);
-        const questionPlayResolvedUrl = this.resolveUrl(`../../bower_components/${this.player}/${this.player}-play-mode/${this.player}-play-mode.html`);
+      _authorQuestion() {
+        const questionAuthoringResolvedUrl = this.resolveUrl(`../../bower_components/${this.playerDialog.player}/${this.playerDialog.player}-authoring-mode/${this.playerDialog.player}-authoring-mode.html`);
+
+        const questionPlayResolvedUrl = this.resolveUrl(`../../bower_components/${this.playerDialog.player}/${this.playerDialog.player}-play-mode/${this.playerDialog.player}-play-mode.html`);
+        
         Polymer.importHref(questionAuthoringResolvedUrl);
         Polymer.importHref(questionPlayResolvedUrl);
-        this.$.authoringMode.innerHTML = `<${this.player}-authoring-mode id="authoringtool"></${this.player}-authoring-mode>`;
-        const playerInPlayMode = document.createElement(`${this.player}-play-mode`);
-        this.$.playMode.innerHTML = "";
-        this.$.playMode.append(playerInPlayMode);
-        this.$.authoringMode.getElementsByTagName(`${this.player}-authoring-mode`)[0].addEventListener('questionChanged', (newValue) => {
+        
+        this.$.fullpage.querySelector('#authoringMode').innerHTML = `<${this.playerDialog.player}-authoring-mode id="authoringtool"></${this.playerDialog.player}-authoring-mode>`;
+        
+        const playerInPlayMode = document.createElement(`${this.playerDialog.player}-play-mode`);
+        this.$.fullpage.querySelector('#playMode').innerHTML = "";
+        this.$.fullpage.querySelector('#playMode').append(playerInPlayMode);
+
+        this.$.fullpage.querySelector('#authoringMode').getElementsByTagName(`${this.playerDialog.player}-authoring-mode`)[0].addEventListener('questionChanged', (newValue) => {
           console.log(newValue);
           this.rawMdQuestion =  newValue.detail.mdQuestion;
           playerInPlayMode.set('mdAssessmentItem', this.rawMdQuestion);
         });
+
+        this.$.fullpage.querySelector('#authoringMode').getElementsByTagName(`${this.playerDialog.player}-authoring-mode`)[0].addEventListener('questionPublished', this._onQuestionPublished.bind(this));
+        
       }
+
+      _getInitializedQuestion() {
+        $.ajax({
+          // url: 'http://localhost:4000/question/initialize',
+          url: 'https://scribe-question.herokuapp.com/question/initialize',
+          success: (initializedQuesion) => {
+            this.initializedQuesion = initializedQuesion;
+          }
+        })
+      };
+
+      _onQuestionPublished({ detail }) {
+        this.initializedQuesion.concept = this.concept.displayName;
+        this.initializedQuesion.content = this.content.displayName;
+        this.initializedQuesion.expectedOutcome = this.expectedOutcome;
+        this.initializedQuesion.question = detail;
+        $.post({
+          url: 'https://scribe-question.herokuapp.com/question/publish',
+          dataType: 'json',
+          data: JSON.stringify(this.initializedQuesion),
+          contentType: "application/json; charset=utf-8",
+          success: (publishedQuestion) => {
+            console.log(publishedQuestion);
+          }
+        });
+      };
 
       _changedRawMDQuestion() {
         console.log("Something changed");
       }
+
+      handleSubmit() {
+        $.ajax({
+          url: 'question',
+          method: 'POST',
+          data: {
+            'concept': this.concept,
+            'content': this.content,
+            'expectedOutcome': this.expectedOutcome
+          }
+        });
+      }
+
+      toggleView() {
+        this.set('playerDialog.opened', true);
+      }
+
+      getSelectedPlayer(){
+        this.set('shouldDisplay', false);
+        this.$.playerTemplate.render();
+        this.authorQuestion();
+        this.set('playerDialog.opened', false);
+      }
+
+      closePlayerOverlay() {
+        this.set('playerDialog.opened', false);
+      }
+
+      openContentSearchDiaog(e) {
+        if(typeof this.content !== 'undefined' && this.content.displayName) {
+          this.contentSearchValue = this.content.displayName;
+          this.set('contentSearchDialog.contentSearchValue', this.content.displayName);
+        }
+        this.set('contentSearchDialog.opened', true);
+      }
+
+      closeContentSearchDialog() {
+        this.set('contentSearchDialog.opened', false);
+      }
+
+      openConceptSearchDiaog() {
+        if(typeof this.concept !== 'undefined' && this.concept.displayName) {
+          this.set('conceptSearchDialog.conceptSearchValue', this.concept.displayName);
+        }
+        this.set('conceptSearchDialog.opened', true);
+      }
+
+      closeConceptSearchDialog() {
+        this.set('conceptSearchDialog.opened', false);
+      }
+
+      _contentSearchValueChanged(searchValue) {
+        if(searchValue.length > 3) {
+          $.ajax({
+            url: 'http://192.168.1.3:3000/contents/search',
+            method: 'POST',
+            data: {
+              "searchTerm": searchValue
+            },
+            success: (results) => {
+              const transformedResults = results.map((result) => {
+                result.clippedDisplayName = result.displayName.slice(0, 50);
+                return result;
+              });
+              this.set('contentSearchDialog.contentSearchResults', transformedResults);
+            },
+            error: (error) => {
+              console.log(error);
+            }
+          });
+        }
+      };
+
+      _conceptSearchValueChanged(searchValue) {
+        if(searchValue.length > 3) {
+          $.ajax({
+            url: 'http://192.168.1.3:3000/concepts/search',
+            method: 'POST',
+            data: {
+              "searchTerm": searchValue
+            },
+            success: (results) => {
+              const transformedResults = results.map((result) => {
+                result.clippedDisplayName = result.displayName.slice(0, 50);
+                return result;
+              });
+              this.set('conceptSearchDialog.conceptSearchResults', transformedResults);
+            },
+            error: (error) => {
+              console.log(error);
+            }
+          });
+        }
+      };
+
+      _playerChanged(player) {
+        if(player !== '') {
+          this.set('shouldDisplay', false);
+          this.$.playerTemplate.render();
+          this._authorQuestion();
+          this.set('playerDialog.opened', false);
+          this._getInitializedQuestion();
+        }
+      }
+
+      _expectedOutcomeChanged(expectedOutcome) {
+        this.set('expectedOutcome', this.expectedOutcomeDialog.expectedOutcome);
+        this.closeExpectedOutcomeDialog();
+      }
+
+      onContentCardClicked(e) {
+        this.set('content', e.currentTarget.dataContent);
+        this.closeContentSearchDialog();
+      };
+
+      onConceptCardClicked(e) {
+        this.set('concept', e.currentTarget.dataConcept);
+        this.closeConceptSearchDialog();
+      };
+
+      openExpectedOutcomeDialog() {
+        this.set('expectedOutcomeDialog.opened', true);
+      }
+
+      closeExpectedOutcomeDialog() {
+        this.set('expectedOutcomeDialog.opened', false);
+      }
+
+      getDefaultConceptValue() {
+        if(typeof this.concept !== 'undefined'){
+          return this.concept.displayName;
+        }
+        else return "Concept";
+      }
+
+      getDefaultContentValue() {
+        if(typeof this.content !== 'undefined'){
+          return this.content.displayName;
+        }
+        else return "Content";
+      }
+
+      changeSlide() {
+        jQuery.fn.fullpage.moveSectionDown();
+      }
+
     }
     window.customElements.define(QuestionAuthoringApp.is, QuestionAuthoringApp);
   </script>
