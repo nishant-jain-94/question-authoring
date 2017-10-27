@@ -15,13 +15,12 @@
 <link rel="import" href="fullpage-import.html">
 
 <dom-module id="question-authoring-app">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900">
   <template>
     <style>
-      @import url('https://fonts.googleapis.com/css?family=Lato:300,400,700,900');
       .fullpage {
         width: 100%;
         height: 100%;
-        /* overflow: hidden; */
         background: white;
         font-family: 'Lato', sans-serif;
       }
@@ -41,6 +40,7 @@
       .section-content {
         display: table-cell;
         padding-left: 80px;
+        padding-right: 80px;
         vertical-align: middle;
       }
 
@@ -51,17 +51,13 @@
 
       .player-section-content-wrapper {
         padding: 30px;
-        /* display: flex;
-        width: 100%;
-        height: 100%;
-        justify-content: space-around; */
         height: 91%;
       }
 
       .player-outer-container{
         display: flex;
         width: 100%;
-        height: 550px;
+        height: 90%;
         justify-content: space-around;
         overflow-y: auto;
       }
@@ -97,7 +93,6 @@
       .floating-button-container{
         display: flex;
         justify-content: center;
-        /* align-content: center; */
         height: 100%;
         align-items: center;
         flex-direction: column;
@@ -108,7 +103,6 @@
       }
 
       .fullscreen-dialog{
-        /* position: fixed; */
         height: 100%;
         width: 100%;
         margin: 0px !important;
@@ -169,7 +163,7 @@
         display: flex;
         width: 90%;
         margin: auto;
-        max-height: 70%;
+        max-height: 80%;
         flex-flow: row wrap;
         overflow-y: auto;
         overflow-x: hidden;
@@ -209,149 +203,186 @@
         font-size: 16px;
       }
 
-      .app-title{
+      .app-title {
         font-size: 2.5em;
+        font-weight: bold;
+        text-transform: underline;
       }
 
       .app-title-mini {
+        font-size: 2em;
+        font-weight: bold;
+        text-transform: underline;
         position: relative;
         bottom: 30px;
         width: 100%;
         text-align: center;
         display: block;
       }
-
     </style>
     <div id="fullpage" class="fullpage">
-        <div class="container section">
-            <div class="section-content-wrapper">
-              <div class="section-content">
-                  <span class="app-title">QScribe</span>
-                  <div class="meta-form">
-                    <p>
-                      I want to create a question that explains a 
-                      <span class="input-element" id="concept" on-click="openConceptSearchDiaog" text-content="{{concept.displayName::input}}" contenteditable="true">{{getDefaultConceptValue()}}</span> related to the 
-                      <span class="input-element" id="content" on-click="openContentSearchDiaog" text-content="{{content.displayName::input}}" contenteditable="true">{{getDefaultContentValue()}}</span> with the 
-                      <span class="input-element" id="expectedOutcome" on-click="openExpectedOutcomeDialog" text-content="{{expectedOutcome::input}}" contenteditable="true">{{expectedOutcome}}</span>.
-                      <div class="btn-section">
-                        <paper-button class="btn" raised on-click="changeSlide">Next</paper-button>
-                      </div>
-                    </p>
-                  </div>
+      <div class="container section">
+        <div class="section-content-wrapper">
+          <div class="section-content">
+            <span class="app-title">Scribe</span>
+            <div class="meta-form">
+              <p>
+                I want to create a question that explains the concept
+                <span class="input-element" id="concept" on-click="openConceptSearchDiaog" text-content="{{concept.displayName::input}}" contenteditable="true">{{getDefaultConceptValue()}}</span> using the content 
+                <span class="input-element" id="content" on-click="openContentSearchDiaog" text-content="{{content.displayName::input}}" contenteditable="true">{{getDefaultContentValue()}}</span> with the intent that someone should be able to
+                <span class="input-element" id="expectedOutcome" on-click="openExpectedOutcomeDialog" text-content="{{expectedOutcome::input}}" contenteditable="true">{{expectedOutcome}}</span> it.
+                <div class="btn-section">
+                  <paper-button class="btn" raised on-click="changeSlide">Next</paper-button>
+                </div>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container section">
+        <div class="player-section-content-wrapper">
+          <dom-if id="playerTemplate" if="{{!shouldDisplay}}">
+            <template>
+              <div class="player-outer-container">
+                <div class="player" id="authoringMode"></div>
+                <div class="player" id="playMode"></div>
               </div>
-            </div>
-        </div>
-        <div class="container section">
-          <div class="player-section-content-wrapper">
-              <dom-if id="playerTemplate" if="{{!shouldDisplay}}">
-                <template>
-                  <div class="player-outer-container">
-                    <div class="player" id="authoringMode"></div>
-                    <div class="player" id="playMode"></div>
-                  </div>
-                </template>
-              </dom-if>
-              <dom-if if="{{shouldDisplay}}">
-                <template>
-                  <div class="floating-button-container">
-                    <paper-fab on-click="toggleView" icon="add"></paper-fab>
-                    <h1>Add a Player</h1>
-                  </div>
-                </template>
-              </dom-if>
-            </div>
-            <span class="app-title-mini">QScribe</span>
-          </div>
-        </div>
-
-      <paper-dialog id="playerDialog" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
-          <span class="overlay-close-btn-container">
-            <paper-icon-button on-click="closePlayerOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
-          </span>
-        <div class="player-list">
-          <div class="player-list-inner">
-            <h1>Choose a Player</h1>
-            <paper-listbox class="list-box" attr-for-selected="player" selected="{{player}}">
-                <paper-item player="mcq-player" toggles class="fancy">mcq-player</paper-item>
-                <paper-item player="code -player" toggles class="fancy">code-player</paper-item>
-                <paper-item player="create-player" toggles class="fancy">create-player</paper-item>
-                <paper-item player="meet-player" toggles class="fancy">meet-player</paper-item>
-                <paper-item player="great-player" toggles class="fancy">great-player</paper-item>
-                <paper-item player="fate-player" toggles class="fancy">fate-player</paper-item>
-            </paper-listbox>
-          </div>
-        </div>
-        <paper-button class="overlay-proceed-btn" on-click="getSelectedPlayer">Proceed</paper-button>
-      </paper-dialog>
-
-      <paper-dialog id="contentSearchDialog" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
-          <span class="overlay-close-btn-container">
-              <paper-icon-button on-click="closeContentSearchOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
-            </span>
-        <paper-input class="search-field" value="{{contentSearchValue}}" on-keyup="onContentValueChanged">
-          <iron-icon icon="search" slot="suffix"></iron-icon>
-        </paper-input>
-        <div class="resultsContainer">
-          <dom-repeat items="{{contentSearchResults}}" as="content">
-            <template>
-              <paper-card class="resultItem" data-content="{{content}}" on-click="onContentCardClicked">
-                <div class="card-content">
-                  <div class="card-header">
-                    {{content.clippedDisplayName}}
-                  </div>
-                </div>
-              </paper-card>
             </template>
-          </dom-repeat>
-        </div>
-        <!-- <paper-button class="search-overlay-apply-btn" on-click="applySelectedContent">Apply</paper-button>         -->
-      </paper-dialog>
-
-      <paper-dialog id="conceptSearchDialog" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
-        <span class="overlay-close-btn-container">
-          <paper-icon-button on-click="closeConceptSearchOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
-        </span>
-        <paper-input class="search-field" value="{{conceptSearchValue}}" on-keyup="onConceptValueChanged">
-          <iron-icon icon="search" slot="suffix"></iron-icon>
-        </paper-input>
-        <div class="resultsContainer">
-          <dom-repeat items="{{conceptSearchResults}}" as="concept">
+          </dom-if>
+          <dom-if if="{{shouldDisplay}}">
             <template>
-              <paper-card data-concept="{{concept}}" on-click="onConceptCardClicked" class="resultItem">
-                <div class="card-content">
-                  <div class="card-header">
-                    {{concept.clippedDisplayName}}
-                  </div>
-                </div>
-              </paper-card>
+              <div class="floating-button-container">
+                <paper-fab on-click="toggleView" icon="add"></paper-fab>
+                <h1>Add a Player</h1>
+              </div>
             </template>
-          </dom-repeat>
+          </dom-if>
         </div>
-        <!-- <paper-button class="search-overlay-apply-btn" on-click="applySelectedConcept">Apply</paper-button>         -->
-      </paper-dialog>
+        <span class="app-title-mini">Scribe</span>
+      </div>
+    </div>
+    
+    <!-- Player Selection Dialog Template -->
+    <paper-dialog id="playerDialogBox" opened="{{playerDialog.opened}}" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
+      <!-- Close button to close the Player Selection Dialog -->
+      <span class="overlay-close-btn-container">
+        <paper-icon-button on-click="closePlayerOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
+      </span>
+      <!-- End of Close button -->
 
-      <paper-dialog id="expectedOutcomeDialog" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
-        <span class="overlay-close-btn-container">
-          <paper-icon-button on-click="closeExpectedOutcomeOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
-        </span>
-        
-        <div class="expected-outcome-list">
-            <div class="expected-outcome-list-inner">
-              <h1>Choose Expected Outcome</h1>
-              <paper-listbox class="list-box" on-iron-select="getExpectedOutcomeValue" attr-for-selected="expected-outcome" selected="{{expectedOutcome}}">
-                  <paper-item expected-outcome="Remember" class="fancy">Remember</paper-item>
-                  <paper-item expected-outcome="Comprehend" class="fancy">Comprehend</paper-item>
-                  <paper-item expected-outcome="Apply" class="fancy">Apply</paper-item>
-                  <paper-item expected-outcome="Analyze" class="fancy">Analyze</paper-item>
-                  <paper-item expected-outcome="Synthesize" class="fancy">Synthesize</paper-item>
-                  <paper-item expected-outcome="Evaluate" class="fancy">Evaluate</paper-item>
-              </paper-listbox>
-            </div>
-          </div>
+      <!-- A list of available players -->
+      <div class="player-list">
+        <div class="player-list-inner">
+          <h1>Choose a Player</h1>
+          <paper-listbox class="list-box" attr-for-selected="player" selected="{{playerDialog.player}}">
+            <paper-item player="mcq-player" toggles class="fancy">mcq-player</paper-item>
+            <paper-item player="code -player" toggles class="fancy">code-player</paper-item>
+            <paper-item player="create-player" toggles class="fancy">create-player</paper-item>
+            <paper-item player="meet-player" toggles class="fancy">meet-player</paper-item>
+            <paper-item player="great-player" toggles class="fancy">great-player</paper-item>
+            <paper-item player="fate-player" toggles class="fancy">fate-player</paper-item>
+          </paper-listbox>
+        </div>
+      </div>
+      <!-- End of list of available players  -->
+      <paper-button class="overlay-proceed-btn" on-click="getSelectedPlayer">Proceed</paper-button>
+    </paper-dialog>
+    <!-- End of Player Selection Dialog Template -->
+    
+    <!-- Content Search Dialog Template -->
+    <paper-dialog id="contentSearchDialogBox" opened="{{contentSearchDialog.opened}}" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
+      
+      <!-- Close button on the paper-dialog to close the Content Search Dialog Template -->
+      <span class="overlay-close-btn-container">
+        <paper-icon-button on-click="closeContentSearchDialog" class="overlay-close-btn" icon="close"></paper-icon-button>
+      </span>
+      <!-- End of close button -->
 
-        <!-- <paper-button class="search-overlay-apply-btn" on-click="applySelectedConcept">Apply</paper-button>         -->
-      </paper-dialog>
+      <!-- Search box to search a Content -->
+      <!-- on-keyup="onContentValueChanged" -->
+      <paper-input class="search-field" placeholder="Search for a Content" value="{{contentSearchDialog.contentSearchValue}}">
+        <iron-icon icon="search" slot="suffix"></iron-icon>
+      </paper-input>
+      <!-- End of Search box -->
 
+      <!-- Result container to display contents -->
+      <div class="resultsContainer">
+        <dom-repeat items="{{contentSearchDialog.contentSearchResults}}" as="content">
+          <template>
+            <paper-card class="resultItem" data-content="{{content}}" on-click="onContentCardClicked">
+              <div class="card-content">
+                <div class="card-header">
+                  {{content.clippedDisplayName}}
+                </div>
+              </div>
+            </paper-card>
+          </template>
+        </dom-repeat>
+      </div>
+      <!-- End of result container -->
+
+    </paper-dialog>
+    <!-- End of Content Search Dialog Template -->
+    
+    <!-- Concept Search Dialog Template -->
+    <paper-dialog id="conceptSearchDialogBox" opened="{{conceptSearchDialog.opened}}" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
+      <!-- Close button on the paper-dialog to close Concept Dialog -->
+      <span class="overlay-close-btn-container">
+        <paper-icon-button on-click="closeConceptSearchDialog" class="overlay-close-btn" icon="close"></paper-icon-button>
+      </span>
+      <!-- End of Close button -->
+
+      <!-- Search box to search a Concept -->
+      <paper-input class="search-field" placeholder="Search for a Concept" value="{{conceptSearchDialog.conceptSearchValue}}">
+        <iron-icon icon="search" slot="suffix"></iron-icon>
+      </paper-input>
+      <!-- End of search box -->
+
+      <!-- Result Container to contain all the Concepts -->
+      <div class="resultsContainer">
+        <dom-repeat items="{{conceptSearchDialog.conceptSearchResults}}" as="concept">
+          <template>
+            <paper-card data-concept="{{concept}}" on-click="onConceptCardClicked" class="resultItem">
+              <div class="card-content">
+                <div class="card-header">
+                  {{concept.clippedDisplayName}}
+                </div>
+              </div>
+            </paper-card>
+          </template>
+        </dom-repeat>
+      </div>
+      <!-- End of Result Container -->
+    </paper-dialog>
+    <!-- End of Concept Search Dialog Template -->
+    
+    <!-- Expected Outcome Dialog Template -->
+    <paper-dialog id="expectedOutcomeDialogBox" opened="{{expectedOutcomeDialog.opened}}" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
+      
+      <!-- Close button on the Paper Dialog for Expected Outcome -->
+      <span class="overlay-close-btn-container">
+        <paper-icon-button on-click="closeExpectedOutcomeDialog" class="overlay-close-btn" icon="close"></paper-icon-button>
+      </span>
+      <!-- End of Close button -->
+
+      <!-- List of Expected Outcomes -->
+      <div class="expected-outcome-list">
+        <div class="expected-outcome-list-inner">
+          <h1>Choose Expected Outcome</h1>
+          <paper-listbox class="list-box" attr-for-selected="expected-outcome" selected="{{expectedOutcomeDialog.expectedOutcome}}">
+            <paper-item expected-outcome="Remember" class="fancy">Remember</paper-item>
+            <paper-item expected-outcome="Comprehend" class="fancy">Comprehend</paper-item>
+            <paper-item expected-outcome="Apply" class="fancy">Apply</paper-item>
+            <paper-item expected-outcome="Analyze" class="fancy">Analyze</paper-item>
+            <paper-item expected-outcome="Synthesize" class="fancy">Synthesize</paper-item>
+            <paper-item expected-outcome="Evaluate" class="fancy">Evaluate</paper-item>
+          </paper-listbox>
+        </div>
+      </div>
+      <!-- End of Expected Outcomes -->
+
+    </paper-dialog>
+    <!-- End of Expected Outcome Dialog Template -->
   </template>
 
   <script>
@@ -367,14 +398,19 @@
           },
           expectedOutcome: {
             type: String,
-            value:'Expected Outcome',
-            observer: 'onExpectedOutcomeChanged'
+            value:'Expected Outcome'
           },
           questionType: {
             type: String 
           },
-          player: {
-            type: String
+          playerDialog: {
+            type: Object,
+            value: function() {
+              return  {
+                opened: false,
+                player: ''
+              }
+            }
           },
           rawMdQuestion: {
             type: String
@@ -383,19 +419,45 @@
             type: Boolean,
             value: true
           },
-          conceptSearchValue: {
-            type: String
+          contentSearchDialog: {
+            type: Object,
+            value: function() {
+              return {
+                opened: false,
+                contentSearchValue: '',
+                contentSearchResults: []
+              }
+            }
           },
-          contentSearchValue: {
-            type: String
+          conceptSearchDialog: {
+            type: Object,
+            value: function() {
+              return {
+                opened: false,
+                conceptSearchValue: '',
+                conceptSearchResults: []
+              }
+            }
+          },
+          expectedOutcomeDialog: {
+            type: Object,
+            value: function() {  
+              return {
+                opened: false,
+                expectedOutcome: 'Expected Outcome'
+              }
+            }
           }
         }
       }
 
-      constructor() {
-        super();
-        this.contentSearchResults = [];
-        this.conceptSearchResults = [];
+      static get observers() {
+        return [
+          '_contentSearchValueChanged(contentSearchDialog.contentSearchValue)',
+          '_conceptSearchValueChanged(conceptSearchDialog.conceptSearchValue)',
+          '_expectedOutcomeChanged(expectedOutcomeDialog.expectedOutcome)',
+          '_playerChanged(playerDialog.player)'
+        ];
       }
 
       connectedCallback() {
@@ -411,21 +473,55 @@
         });
       }
 
-      authorQuestion() {
-        const questionAuthoringResolvedUrl = this.resolveUrl(`../../bower_components/${this.player}/${this.player}-authoring-mode/${this.player}-authoring-mode.html`);
-        const questionPlayResolvedUrl = this.resolveUrl(`../../bower_components/${this.player}/${this.player}-play-mode/${this.player}-play-mode.html`);
+      _authorQuestion() {
+        const questionAuthoringResolvedUrl = this.resolveUrl(`../../bower_components/${this.playerDialog.player}/${this.playerDialog.player}-authoring-mode/${this.playerDialog.player}-authoring-mode.html`);
+
+        const questionPlayResolvedUrl = this.resolveUrl(`../../bower_components/${this.playerDialog.player}/${this.playerDialog.player}-play-mode/${this.playerDialog.player}-play-mode.html`);
+        
         Polymer.importHref(questionAuthoringResolvedUrl);
         Polymer.importHref(questionPlayResolvedUrl);
-        this.$.fullpage.querySelector('#authoringMode').innerHTML = `<${this.player}-authoring-mode id="authoringtool"></${this.player}-authoring-mode>`;
-        const playerInPlayMode = document.createElement(`${this.player}-play-mode`);
+        
+        this.$.fullpage.querySelector('#authoringMode').innerHTML = `<${this.playerDialog.player}-authoring-mode id="authoringtool"></${this.playerDialog.player}-authoring-mode>`;
+        
+        const playerInPlayMode = document.createElement(`${this.playerDialog.player}-play-mode`);
         this.$.fullpage.querySelector('#playMode').innerHTML = "";
         this.$.fullpage.querySelector('#playMode').append(playerInPlayMode);
-        this.$.fullpage.querySelector('#authoringMode').getElementsByTagName(`${this.player}-authoring-mode`)[0].addEventListener('questionChanged', (newValue) => {
+
+        this.$.fullpage.querySelector('#authoringMode').getElementsByTagName(`${this.playerDialog.player}-authoring-mode`)[0].addEventListener('questionChanged', (newValue) => {
           console.log(newValue);
           this.rawMdQuestion =  newValue.detail.mdQuestion;
           playerInPlayMode.set('mdAssessmentItem', this.rawMdQuestion);
         });
+
+        this.$.fullpage.querySelector('#authoringMode').getElementsByTagName(`${this.playerDialog.player}-authoring-mode`)[0].addEventListener('questionPublished', this._onQuestionPublished.bind(this));
+        
       }
+
+      _getInitializedQuestion() {
+        $.ajax({
+          // url: 'http://localhost:4000/question/initialize',
+          url: 'https://scribe-question.herokuapp.com/question/initialize',
+          success: (initializedQuesion) => {
+            this.initializedQuesion = initializedQuesion;
+          }
+        })
+      };
+
+      _onQuestionPublished({ detail }) {
+        this.initializedQuesion.concept = this.concept.displayName;
+        this.initializedQuesion.content = this.content.displayName;
+        this.initializedQuesion.expectedOutcome = this.expectedOutcome;
+        this.initializedQuesion.question = detail;
+        $.post({
+          url: 'https://scribe-question.herokuapp.com/question/publish',
+          dataType: 'json',
+          data: JSON.stringify(this.initializedQuesion),
+          contentType: "application/json; charset=utf-8",
+          success: (publishedQuestion) => {
+            console.log(publishedQuestion);
+          }
+        });
+      };
 
       _changedRawMDQuestion() {
         console.log("Something changed");
@@ -444,58 +540,57 @@
       }
 
       toggleView() {
-        // this.set('shouldDisplay',!this.shouldDisplay);
-        this.$.playerDialog.open();
+        this.set('playerDialog.opened', true);
       }
 
       getSelectedPlayer(){
-        this.$.playerDialog.close();
-        this.set('shouldDisplay',false);
+        this.set('shouldDisplay', false);
         this.$.playerTemplate.render();
         this.authorQuestion();
+        this.set('playerDialog.opened', false);
       }
 
       closePlayerOverlay() {
-        this.$.playerDialog.close();
+        this.set('playerDialog.opened', false);
       }
 
       openContentSearchDiaog(e) {
-        if(typeof this.content !== 'undefined') {
+        if(typeof this.content !== 'undefined' && this.content.displayName) {
           this.contentSearchValue = this.content.displayName;
+          this.set('contentSearchDialog.contentSearchValue', this.content.displayName);
         }
-        this.$.contentSearchDialog.open();
+        this.set('contentSearchDialog.opened', true);
       }
 
-      closeContentSearchOverlay() {
-        this.$.contentSearchDialog.close();
+      closeContentSearchDialog() {
+        this.set('contentSearchDialog.opened', false);
       }
 
-      openConceptSearchDiaog(e) {
-        if(typeof this.concept !== 'undefined') {
-          this.conceptSearchValue = this.concept.displayName;
+      openConceptSearchDiaog() {
+        if(typeof this.concept !== 'undefined' && this.concept.displayName) {
+          this.set('conceptSearchDialog.conceptSearchValue', this.concept.displayName);
         }
-        this.$.conceptSearchDialog.open();
+        this.set('conceptSearchDialog.opened', true);
       }
 
-      closeConceptSearchOverlay() {
-        this.$.conceptSearchDialog.close();
+      closeConceptSearchDialog() {
+        this.set('conceptSearchDialog.opened', false);
       }
 
-      onContentValueChanged() {
-        if(this.contentSearchValue.length > 3) {
-          console.log(this.content);
+      _contentSearchValueChanged(searchValue) {
+        if(searchValue.length > 3) {
           $.ajax({
             url: 'http://192.168.1.3:3000/contents/search',
             method: 'POST',
             data: {
-              "searchTerm": this.contentSearchValue
+              "searchTerm": searchValue
             },
             success: (results) => {
               const transformedResults = results.map((result) => {
                 result.clippedDisplayName = result.displayName.slice(0, 50);
                 return result;
               });
-              this.set('contentSearchResults', transformedResults);
+              this.set('contentSearchDialog.contentSearchResults', transformedResults);
             },
             error: (error) => {
               console.log(error);
@@ -504,20 +599,20 @@
         }
       };
 
-      onConceptValueChanged() {
-        if(this.conceptSearchValue.length > 3) {
+      _conceptSearchValueChanged(searchValue) {
+        if(searchValue.length > 3) {
           $.ajax({
             url: 'http://192.168.1.3:3000/concepts/search',
             method: 'POST',
             data: {
-              "searchTerm": this.conceptSearchValue
+              "searchTerm": searchValue
             },
             success: (results) => {
               const transformedResults = results.map((result) => {
                 result.clippedDisplayName = result.displayName.slice(0, 50);
                 return result;
               });
-              this.set('conceptSearchResults', transformedResults);
+              this.set('conceptSearchDialog.conceptSearchResults', transformedResults);
             },
             error: (error) => {
               console.log(error);
@@ -526,22 +621,37 @@
         }
       };
 
+      _playerChanged(player) {
+        if(player !== '') {
+          this.set('shouldDisplay', false);
+          this.$.playerTemplate.render();
+          this._authorQuestion();
+          this.set('playerDialog.opened', false);
+          this._getInitializedQuestion();
+        }
+      }
+
+      _expectedOutcomeChanged(expectedOutcome) {
+        this.set('expectedOutcome', this.expectedOutcomeDialog.expectedOutcome);
+        this.closeExpectedOutcomeDialog();
+      }
+
       onContentCardClicked(e) {
         this.set('content', e.currentTarget.dataContent);
-        this.$.contentSearchDialog.close();
+        this.closeContentSearchDialog();
       };
 
       onConceptCardClicked(e) {
         this.set('concept', e.currentTarget.dataConcept);
-        this.$.conceptSearchDialog.close();
+        this.closeConceptSearchDialog();
       };
 
       openExpectedOutcomeDialog() {
-        this.$.expectedOutcomeDialog.open();
+        this.set('expectedOutcomeDialog.opened', true);
       }
 
-      closeExpectedOutcomeOverlay() {
-        this.$.expectedOutcomeDialog.close();
+      closeExpectedOutcomeDialog() {
+        this.set('expectedOutcomeDialog.opened', false);
       }
 
       getDefaultConceptValue() {
@@ -556,11 +666,6 @@
           return this.content.displayName;
         }
         else return "Content";
-      }
-
-      onExpectedOutcomeChanged() {
-        console.log(this.expectedOutcome);
-        this.$.expectedOutcomeDialog.close();
       }
 
       changeSlide() {
