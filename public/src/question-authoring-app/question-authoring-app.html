@@ -580,7 +580,7 @@
       _contentSearchValueChanged(searchValue) {
         if(searchValue.length > 3) {
           $.ajax({
-            url: 'http://192.168.1.3:3000/contents/search',
+            url: 'http://concept-engine-dev.stackroute.in/contents/search',
             method: 'POST',
             data: {
               "searchTerm": searchValue
@@ -602,7 +602,7 @@
       _conceptSearchValueChanged(searchValue) {
         if(searchValue.length > 3) {
           $.ajax({
-            url: 'http://192.168.1.3:3000/concepts/search',
+            url: 'http://concept-engine-dev.stackroute.in/concepts/search',
             method: 'POST',
             data: {
               "searchTerm": searchValue
