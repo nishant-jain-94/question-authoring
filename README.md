@@ -9,7 +9,7 @@ First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polyme
 ## Viewing Your Application
 
 ```
-$ polymer serve
+$ npm start
 ```
 
 ## Building Your Application
