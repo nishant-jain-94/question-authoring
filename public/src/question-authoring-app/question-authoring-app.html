@@ -13,6 +13,8 @@
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="jquery-import.html">
 <link rel="import" href="fullpage-import.html">
+<link rel="import" href="content-field.html">
+
 
 <dom-module id="question-authoring-app">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900">
@@ -229,7 +231,7 @@
               <p>
                 I want to create a question that explains the concept
                 <span class="input-element" id="concept" on-click="openConceptSearchDiaog" text-content="{{concept.displayName::input}}" contenteditable="true">{{getDefaultConceptValue()}}</span> using the content 
-                <span class="input-element" id="content" on-click="openContentSearchDiaog" text-content="{{content.displayName::input}}" contenteditable="true">{{getDefaultContentValue()}}</span> with the intent that someone should be able to
+                <content-field concept="{{concept}}"></content-field> with the intent that someone should be able to
                 <span class="input-element" id="expectedOutcome" on-click="openExpectedOutcomeDialog" text-content="{{expectedOutcome::input}}" contenteditable="true">{{expectedOutcome}}</span> it.
                 <div class="btn-section">
                   <paper-button class="btn" raised on-click="changeSlide">Next</paper-button>

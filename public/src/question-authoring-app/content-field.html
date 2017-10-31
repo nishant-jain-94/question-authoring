@@ -1,0 +1,85 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="search-overlay.html">
+
+<dom-module id="content-field">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+      }
+      .input-element {
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.2em;        
+        font-weight: 700;
+        display: inline-block;
+        border: none;
+        width: auto;
+        background: whitesmoke;
+      }
+    </style>
+    <span class="input-element" id="content" on-click="openContentSearchOverlay" text-content="{{content.displayName::input}}" contenteditable="true">{{getDefaultContentValue()}}</span>                          
+    <search-overlay search-overlay-object="{{contentSearchObject}}"></search-overlay>
+  </template>
+
+  <script>
+    /**
+     * `content-field`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ContentField extends Polymer.Element {
+      static get is() { return 'content-field'; }
+      static get properties() {
+        return {
+          content: {
+            type: Object,
+            notify: true
+          },
+          contentSearchObject: {
+            type: Object,
+            value: function() {
+              return {
+                opened: false,
+                id: 'contentSearchOverlay',
+                inputPlaceholder: 'Search for Content',
+                placeholder: 'Search for Content',
+                url: 'https://concept-engine-dev.stackroute.in/contents/search',
+                searchValue: '',
+                searchResults: [],
+                selectedValue: ''
+              }
+            }
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_selectedValueChanged(contentSearchObject.selectedValue)',
+        ];
+      }
+
+      getDefaultContentValue() {
+          console.log(this.content);
+        if(typeof this.content !== 'undefined'){
+          return this.content.displayName;
+        }
+        else return "Content";
+      }
+
+      openContentSearchOverlay() {
+        this.set('contentSearchObject.opened',true);
+      }
+
+      _selectedValueChanged(selectedValue) {
+        if(typeof this.content !== 'undefined'){
+          this.set('content', selectedValue);
+        }
+      }
+    }
+    window.customElements.define(ContentField.is, ContentField);
+  </script>
+</dom-module>

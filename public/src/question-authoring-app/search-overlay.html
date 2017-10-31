@@ -1,0 +1,195 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/web-animations-js/web-animations-next-lite.min.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-down-animation.html">
+
+<dom-module id="search-overlay">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .fullscreen-dialog{
+        /* position: fixed; */
+        height: 100%;
+        width: 100%;
+        margin: 0px !important;
+      }
+      .overlay-close-btn-container{
+        position: fixed;
+        right: 30px;
+        top: 15px;
+        margin: 0;
+        padding: 0;
+      }
+      .overlay-close-btn{
+        color: #c2c2c2;
+        width: 50px;
+        height: 50px;
+      }
+      .resultsContainer {
+        display: flex;
+        width: 90%;
+        margin: auto;
+        max-height: 70%;
+        flex-flow: row wrap;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      .resultItem {
+        margin: 10px;
+        height: 70px;
+        width: 100%;
+        font-size: 1.5em;
+        padding: 10px;
+      }
+      .search-field {
+        width: 70%;
+        margin: auto;
+        padding: auto;
+        margin-top: 20px;
+        --paper-input-container-input: {
+          font-size: 2em;
+          font-weight: bold;
+        }
+        --paper-input-container-focus-color: black;
+        --paper-input-container-label: {
+          font-size: 2em;
+          line-height: 45px;
+        }
+      }
+      .search-overlay-apply-btn{
+        position: fixed;
+        right: 34px;
+        bottom: 0px;
+        background: black;
+        color: white;
+        padding: 14px;
+        font-size: 16px;
+      }
+    </style>
+    <paper-dialog id="[[searchOverlayObject.id]]" opened="{{searchOverlayObject.opened}}" class="fullscreen-dialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation">
+        <span class="overlay-close-btn-container">
+          <paper-icon-button on-click="closeSearchOverlay" class="overlay-close-btn" icon="close"></paper-icon-button>
+        </span>
+    
+        <paper-input class="search-field" placeholder="[[searchOverlayObject.inputPlaceholder]]" value="{{searchOverlayObject.searchValue}}">
+            <iron-icon icon="search" slot="suffix"></iron-icon>
+        </paper-input>
+        <div class="resultsContainer">
+            <dom-repeat items="{{searchOverlayObject.searchResults}}" as="searchItem">
+                <template>
+                    <paper-card class="resultItem" data-search="{{searchItem}}" on-click="onCardClicked">
+                        <div class="card-content">
+                            <div class="card-header">
+                            {{searchItem.clippedDisplayName}}
+                            </div>
+                        </div>
+                    </paper-card>
+                </template>
+            </dom-repeat>
+        </div>
+    </paper-dialog>
+</template>
+
+<script>
+    /**
+     * `content-search-overlay`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class SearchOverlay extends Polymer.Element {
+      static get is() { return 'search-overlay'; }
+      static get properties() {
+        return {
+          searchItem: {
+            type: Object
+          },
+          searchValue: {
+            type: String
+          },
+          id:{
+            type: String
+          },
+          opened: {
+            type: Boolean
+          },
+          inputPlaceholder: {
+            type: String
+          },
+          searchOverlayObject: {
+            type: Object,
+            notify: true
+          }
+        };
+      }
+      constructor() {
+        super();
+        this.searchResults = [];
+      }
+
+      static get observers() {
+        return [
+          '_searchValueChanged(searchOverlayObject.searchValue, searchOverlayObject.url)',
+        ];
+      }
+
+      _searchValueChanged(searchValue, url) {
+        if(searchValue.length > 3) {
+          $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+              "searchTerm": searchValue
+            },
+            success: (results) => {
+              const transformedResults = results.map((result) => {
+                result.clippedDisplayName = result.displayName.slice(0, 50);
+                return result;
+              });
+              this.set('searchOverlayObject.searchResults', transformedResults);
+            },
+            error: (error) => {
+              console.log(error);
+            }
+          });
+        }
+      };
+
+      onCardClicked(e) {
+        this.set('searchOverlayObject.selectedValue', e.currentTarget.dataSearch);
+        this.closeSearchOverlay();
+      };
+
+      closeSearchOverlay() {
+        this.set('searchOverlayObject.opened',false);
+      }
+      
+    }
+    window.customElements.define(SearchOverlay.is, SearchOverlay);
+  </script>
+</dom-module>
+<!-- dummycontentSearchDialog: {
+            type: Object,
+            value: function() {
+              return {
+                opened: false,
+                id: 'contentSearchOverlay',
+                inputPlaceholder: 'Search for Content',
+                placeholder: 'Search for Content',
+                url: 'https://concept-engine-dev.stackroute.in/contents/search',
+                searchValue: '',
+                searchResults: [],
+                selectedValue: ''
+              }
+            }
+          },>
